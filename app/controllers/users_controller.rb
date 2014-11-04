@@ -84,6 +84,7 @@ class UsersController < ApplicationController
     
 
     for i in 0..(coordinates.length-1)
+      
 
       current_neighbours = Array.new
 
@@ -108,16 +109,17 @@ class UsersController < ApplicationController
       puts "***********************"
 
       #find Uniq/new coordinates
-      # @uniqCoords = current_neighbours - @present
-       @uniqCoords = @present - current_neighbours
+      @uniqCoords = current_neighbours - @present
+       # @uniqCoords = @present - current_neighbours
 
       puts "*******uniqCoords*****"
       puts @uniqCoords
       puts "***********************"
       if @uniqCoords.empty?
-         @uniqCoords.each do |u| 
-         @boundary << u 
-         end       
+        @boundary = @searchResult.map { |c| c.location.coordinates }
+         # current_neighbours.each do |u| 
+         # @boundary << u 
+         # end       
       else
         @uniqCoords.each do |u|
          @present << u 
@@ -140,6 +142,14 @@ class UsersController < ApplicationController
   search_neighbour_rec(@present, @distance)
   puts "*****Present after rec***********"
   puts @present
+
+# @neighbours_coord.each do |d|
+#   @boundary << d
+# end
+
+@corkParkBoundary = [[53.361547, -6.252126], [53.361483, -6.252163], [53.361397, -6.252217], [53.361323, -6.252249], [53.361253, -6.252319], [53.361157, -6.252378], [53.361080, -6.252458], [53.360977, -6.252490], [53.360897, -6.252560], [53.360753, -6.252630], [53.360609, -6.252716], [53.360452, -6.252796], [53.360292, -6.252882], [53.360081, -6.252844], [53.360010, -6.252863], [53.359777, -6.252437], [53.359719, -6.252077], [53.359580, -6.251452], [53.359450, -6.250908], [53.359530, -6.250345], [53.359714, -6.250125], [53.359860, -6.250066], [53.359874, -6.250125], [53.360225, -6.249883], [53.360398, -6.249808], [53.360478, -6.249720], [53.360614, -6.249690], [53.360755, -6.249612], [53.360923, -6.249500], [53.360897, -6.249524]]
+
+
 end
 
 

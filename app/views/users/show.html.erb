@@ -28,6 +28,12 @@
 <%= @f = @present.map{|d| d.reverse}%>
 <%= @f = @f.map{|lat, long| {lat: lat, lng: long} }%>
 
+<h3>Boundar Hash</h3>
+
+<% @c = @boundary.map{|d| d.reverse}%>
+
+<%= @c = @c.map{|lat, long| {lat: lat, lng: long}} %>
+
 
 
 
@@ -65,7 +71,7 @@
 
 <script type="text/javascript">
 // var myData = <%= raw json_escape(@fakeData.to_json) %>;
-var myData = <%= @f.to_json.html_safe %>
+var myData = <%= @c.to_json.html_safe %>
 
 
 	var handler = Gmaps.build('Google');
@@ -76,9 +82,15 @@ handler.buildMap({ internal: {id: 'multi_overlays'}}, function(){
     [
     myData
        // [
-       //  { lat: 53.352475, lng: -6.228275}, 
-       //  { lat: 53.352480, lng: -6.228277}, 
-       //  { lat: 53.352847, lng: -6.228101}
+       //  // { lat: 53.352475, lng: -6.228275}, 
+       //  // { lat: 53.352480, lng: -6.228277}, 
+       //  // { lat: 53.352847, lng: -6.228101}
+       //  {lat: 53.353762, lng: -6.227431}, 
+       //  {lat: 53.353584, lng: -6.227012}, 
+         
+       //  {lat: 53.353318, lng: -6.227357},
+       //  {lat: 53.353546, lng: -6.227901},
+       //  {lat: 53.353762, lng: -6.227431}
        //  ]
     ],
     { strokeColor: '#FF0000'}
