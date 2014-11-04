@@ -1,7 +1,8 @@
 class Event
   include Mongoid::Document
-  include Mongoid::Geospatial
-  field :location, type: Point
+   
+  field :name 
+  field :location, type: Array
 
-  spatial_index :location
+
 end

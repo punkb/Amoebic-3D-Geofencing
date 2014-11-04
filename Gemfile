@@ -8,11 +8,12 @@ gem 'rails', '4.1.6'
 gem 'mongoid', git: "git://github.com/mongoid/mongoid.git"
 gem 'bson_ext'
 
-gem 'mongoid_geospatial'
-gem 'rgeo'
+# gem 'mongoid_geospatial'
+# gem 'rgeo'
+# gem 'georuby'
 
 gem 'geocoder'
-gem 'mongoid_spacial'
+# gem 'mongoid_spacial'
 
 gem 'gmaps4rails'
 gem 'underscore-rails'

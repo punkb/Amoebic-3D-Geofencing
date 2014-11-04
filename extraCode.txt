@@ -9,6 +9,152 @@ Code to add multipe data through irb
  for i in 0..9
    User.create(name:UserArray[i])
    a = User.last
-   a.places << Place.create(location:CoordinateArray[i])
+   a.places << Place.create(type: "Point", location:CoordinateArray[i])
    a.save
   end
+
+ for i in 0..9
+   User.create(name:UserArray[i])
+   a = User.last
+   a.places << Place.create(location:{ type: "Point", coordinates:CoordinateArray[i]})
+   a.save
+  end
+
+
+  *********************Old Rec logic*******************
+  def show
+
+    #Variables
+    @places = Place.all
+    @users = User.all
+    
+    @present = Array.new  #Array of In-Boundary users/InStadium Users
+    @boundary = Array.new  #Array of Boundary User (The main output array)
+    @neighboursId_array = Array.new
+    @presentFinal = Array.new
+
+    #Event Data Starts
+    @events = Event.all
+    @event_Titles = Array.new
+    @event_Coord = Array.new     
+        
+    @events.each do |e|
+      @event_Titles << e.name
+      @event_Coord << e.location 
+    end
+    @eventTitle = @event_Titles[0] #@eventTitle = TestingEvent
+    @eventCoords = @event_Coord[0] #@eventCoords = [-6.22998, 53.3516]
+         #EventData Ends
+    
+    def first_user(coords) 
+      @temp = Array.new
+      @t = Array.new
+      @data = Place.geo_near(coords).spherical.max_distance(0.00001)
+
+        @neighboursId_array = @data.map{ |d| d.user_id } #User's ID
+        @temp = @data.map { |d| d.location.coordinates }
+        @temp.map { |e| @t << e  }
+        #@present << @t
+
+    puts "*******@presentLength***"
+    puts @present.length
+
+    puts "*******@tLength***"
+    puts @t.length
+
+    puts "*******@tempLength***"
+    puts @temp.length
+    end
+    
+    first_user(@eventCoords)
+
+
+    @distance = 0.00001
+
+    @neighbours_cordinates = Array.new
+
+    @present << @temp
+
+    #making 3d (@presentArray [[[x,y]]]) tp 2d@present [[]] array to comapre
+     @present.each do |x|
+      x.each do |y|
+        @presentFinal << y
+      end
+    end
+
+
+def search_rec(dist, coordinates)
+
+  unless @presentFinal.length == 8
+
+@nextData = Array.new()
+for i in 1..coordinates.length
+
+    localTemp = Array.new()
+    @p = Array.new 
+    @uniqArray = Array.new 
+
+
+    puts "******localTemp0****"
+    puts localTemp
+
+    #@localTemp << coordinates
+
+    coordinates.map { |x| @q = x }
+
+    puts "*****@q***"
+    puts @q
+
+    
+
+    @queryData = Place.geo_near(@q).spherical.max_distance(dist)
+    b = @queryData
+
+
+    #extract the location.coordinates from @queryData and put it in @uniqArray(2D array of coordinates) 
+    @queryData.map { |x| @uniqArray << x.location.coordinates }
+   
+
+    #Extracting Uniq coordinates by comaparing presentFinal data with new data 
+   @uniqArray = @uniqArray-@presentFinal
+
+   if @uniqArray.empty?
+
+    # @boundary = coordinates
+
+    # puts"***Array is Empty****"
+    # @distance = 0.00002
+
+    break
+
+     
+
+    else
+
+   #map uniq array to presentFinal 2D Array 
+   @uniqArray.map { |e| @presentFinal << e  }
+    end
+
+   @queryData.map { |x| localTemp << x.location.coordinates }     
+
+
+  end
+    @nextData = localTemp
+
+    puts "*******@nextData"
+    puts @nextData 
+
+
+  
+  end
+  # search_rec(@distance, @nextData)
+ 
+  end
+
+
+search_rec(@distance, @temp)
+
+
+  end
+
+  ************************************
