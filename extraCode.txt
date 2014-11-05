@@ -1,6 +1,8 @@
 
 UserArray = ["Nachiket", "John", "Mike", "Jason", "Marcelo", "Raksha", "Appy", "Vish", "Jay", "Tanya"]
 
+UserName = ["NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork"]
+
 CoordinateArray = [[-6.228275, 53.352475], [-6.228101, 53.352847], [-6.227760, 53.353118], [-6.227357, 53.353318], [-6.227012, 53.353584], [-6.227431, 53.353762], [-6.227901, 53.353546], [-6.228383, 53.353386], [-6.228618, 53.353481], [-6.229023, 53.353228]]
 
 
@@ -17,6 +19,13 @@ Code to add multipe data through irb
    User.create(name:UserArray[i])
    a = User.last
    a.places << Place.create(location:{ type: "Point", coordinates:CoordinateArray[i]})
+   a.save
+  end
+
+   for i in 0..UserName.length-1
+   User.create(name:UserName[i])
+   a = User.last
+   a.places << Place.create(location:{ type: "Point", coordinates:UserArray[i]})
    a.save
   end
 

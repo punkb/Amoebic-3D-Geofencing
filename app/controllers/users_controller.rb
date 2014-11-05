@@ -20,8 +20,8 @@ class UsersController < ApplicationController
     @eTitle << e.name
     @eCoord << e.location
    end
-    @currentEvent = @eTitle[0]
-    @currentEventCoord = @eCoord[0] #Event Coordinate to search first set of users
+    @currentEvent = @eTitle[1]
+    @currentEventCoord = @eCoord[1] #Event Coordinate to search first set of users
 
   #Event section Ends
 
@@ -33,15 +33,15 @@ class UsersController < ApplicationController
 
   def search (coordinates, distance)
     @searchResult = Place.geo_near(coordinates).spherical.max_distance(distance)
-    if (@searchResult).empty? 
-    if distance < 0.0001 
-      distance =+ 0.00001
-      search(coordinates, distance)
-    end
+    # if (@searchResult).empty? 
+    # if distance <= 0.00001
+    #   distance =+ 0.00001
+    #   search(coordinates, distance)
+    # end
       
-    else
-      return @searchResult
-    end
+    # else
+    #   return @searchResult
+    # end
   end
 
 
@@ -160,6 +160,7 @@ end
   # GET /users/new
   def new
     @user = User.new
+    # @place = Place.new
   end
 
   # GET /users/1/edit
