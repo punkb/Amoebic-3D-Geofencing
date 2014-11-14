@@ -25,7 +25,15 @@ Code to add multipe data through irb
    for i in 0..UserName.length-1
    User.create(name:UserName[i])
    a = User.last
-   a.places << Place.create(location:{ type: "Point", coordinates:UserArray[i]})
+   a.places << Place.create(location:{ type: "Point", coordinates:UserArray[i], height:0.0})
+   a.save
+  end
+
+
+for i in 0..19
+User.create(name:n[i])
+a = User.last
+   a.places << Place.create(location:{ type: "Point", coordinates:u[i], height:1})
    a.save
   end
 

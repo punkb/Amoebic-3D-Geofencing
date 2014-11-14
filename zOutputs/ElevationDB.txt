@@ -1,0 +1,20 @@
+names = ["NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork", "NachiketCork", "JohnCork", "MikeCork", "JasonCork", "MarceloCork", "RakshaCork", "AppyCork", "VishCork", "JayCork", "TanyaCork", "GirishCork"]
+
+
+
+
+Min Height
+Cmin = [[53.361208, -6.251547], [53.361023, -6.251665], [53.360811, -6.251794], [53.360587, -6.251923], [53.360357, -6.252089], [53.360206, -6.252201], [53.360149, -6.251949], [53.360088, -6.251665], [53.360011, -6.251311], [53.359934, -6.250962], [53.359998, -6.250726], [53.360174, -6.250614], [53.360309, -6.250555], [53.360453, -6.250453], [53.360651, -6.250340], [53.360875, -6.250211], [53.361003, -6.250125]]
+
+Max Height
+Cmax= [[53.360907, -6.249766], [53.360712, -6.249889], [53.360542, -6.249997], [53.360350, -6.250104], [53.360187, -6.250195], [53.359924, -6.250361], [53.359966, -6.250356], [53.359755, -6.250544], [53.359716, -6.251155], [53.359841, -6.251617], [53.359924, -6.251982], [53.360049, -6.252384], [53.360273, -6.252459], [53.360462, -6.252346], [53.360690, -6.252271], [53.360853, -6.252142], [53.361087, -6.252008], [53.361330, -6.251831]]
+
+
+
+
+for i in 0..(Cmin.length-1)
+User.create(name:names[i])
+a = User.last
+   a.places << Place.create(location:{ type: "Point", coordinates:Cmin[i] }, height:1)
+   a.save
+  end

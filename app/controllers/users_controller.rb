@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  # before_action :set_user, only: [:show, :edit, :update, :destroy]
+   before_action :set_user, only: [:edit, :update, :destroy]
 
   # GET /users
   # GET /users.json
@@ -10,6 +10,11 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
  def show
+
+ # @test = Place.where(:"location.height".gt => 5)
+ # @test = @test.map { |e| e.location.coordinates  }
+
+  # @test = Place.geo_near([-6.2515651, 53.3609245]).spherical.average_distance
 
    #Event Section Start
    @events = Event.all
@@ -23,104 +28,203 @@ class UsersController < ApplicationController
     @currentEvent = @eTitle[1]
     @currentEventCoord = @eCoord[1] #Event Coordinate to search first set of users
 
+    puts "******************Start Event******************"
+    puts "Event Name"
+    puts @currentEvent
+    puts "****Event Coordinates"
+    puts @currentEventCoord
+    puts "******************End Event******************"
+
   #Event section Ends
 
     @present = Array.new
+    @finalPolygon = Array.new
+    @presentName = Array.new
     @boundary = Array.new
-    @distance = 0.00001
+    @fixDist = 5/6378139.266
+      @distance = 5/6378139.266
+      @distInMeter = 5
+      #0.00000016
+     # @distance = 0.00001
+    # @FinalDist = 
+
+#     SPHERICAL QUERIES USE RADIANS FOR DISTANCE
+# For spherical operators to function properly, you must convert distances to radians, and convert from radians to the distances units used by your application.
+
+# To convert:
+
+# distance to radians: divide the distance by the radius of the sphere (e.g. the Earth) in the same units as the distance measurement.
+# radians to distance: multiply the radian measure by the radius of the sphere (e.g. the Earth) in the units system that you want to convert the distance to.
+# The radius of the Earth is approximately 3963.192 miles or 6378.137 kilometers.
+# 3 963.192 mile = 20 925 653.76 feet
+# 3 963.192 mile = 6 378 139.266 meter
 
   
 
   def search (coordinates, distance)
+    @check = Array.new
     @searchResult = Place.geo_near(coordinates).spherical.max_distance(distance)
-    # if (@searchResult).empty? 
-    # if distance <= 0.00001
-    #   distance =+ 0.00001
-    #   search(coordinates, distance)
-    # end
+    @resultCoords = @searchResult.map { |e| e.location.coordinates  }
+    @check << coordinates
+    puts "@check"+"#{@check}"
+    puts "@resultCoords"+ "#{@resultCoords}"
+
+
+    checkEmpty = @resultCoords - @check
+     puts "checkEmpty"+"#{checkEmpty}"
+    if checkEmpty.empty? || (checkEmpty-@present).length < 2 
+      puts "*********SEARCH RESULT IS EMPTY********"
+        if distance <= 80/6378139.266
+          distance = (distance+@fixDist)
+          @distInMeter += 5
+
+          # for i in 2..20
+          #   distance = i/6378139.266
+            puts "******* Now Searching for distance: "+"#{@distInMeter}"+"meters"
+            search(coordinates, distance)
+        
+        end
       
-    # else
-    #   return @searchResult
-    # end
+    else
+      puts "******"+" #{checkEmpty.length} "+"Users found withing distance = "+"#{@distInMeter}"+"meters"+"*********"
+      @distInMeter = 5
+
+      return @searchResult
+    end
+    @distInMeter = 5
   end
+
+  def get_userName(id)
+    @result = User.where(_id: id)
+    @userName = @result.map { |e| e.name  }
+    return @userName
+    
+  end
+
 
 
   def first_userSet(coordinates, distance)
 
-    puts "*******Calling Search from first User"
-    puts coordinates 
-    puts distance
-    puts "******************"
+   puts "****Start In first_userSet******"
+   puts "first_userSet"+"(""#{coordinates}"+"," "#{distance}"+")"
+   puts "search"+"("+"#{coordinates}"+","+","+"#{distance}"+")"
 
     search(coordinates, distance)
 
-    puts "******* Searched from first_User"
-    
-    puts "******************"
-
-    puts
     if (@searchResult).empty?
       #do Nothing
+      puts "*****@searchResult.empty?****"
      
     else
       @neighbours_coord =  Array.new
       @neighbours_id = Array.new
-      @neighbours_coord = @searchResult.map { |c| c.location.coordinates }
+      @neighbours_height = Array.new
+      @place_id = Array.new
+      @names = Array.new
+      @neighbours_coord = @searchResult.map { |c| c.location.coordinates}
+      @neighbours_height = @searchResult.map { |c| c.height }
+      
       @neighbours_id = @searchResult.map { |c| c.user_id }
+      puts "*******@neighbours_id: "
+      @neighbours_id.each do |x|
+        get_userName(x)
+        @names << @userName
+      end
+      puts "*******@neighbours_names:"
+      puts @names
+      @place_id = @searchResult.map { |c| c._id }
       @present = @neighbours_coord
+      @finalPolygon = @neighbours_coord
+
+      
+      puts"@Present before rec: = first_userset @neighbours_coord: "+"["+"#{@neighbours_coord}"+"]"
     end
   end
 
-  puts "*****Present before rec***********"
-  puts @present
+  
 
-
-  first_userSet(@currentEventCoord, @distance)
+  def printArrayToConsole(a)
+    a.each do |x|
+      puts "#{x}"
+    end
+    
+  end
   
 
   def search_neighbour_rec(coordinates, distance)
 
-    @next_neighbours = Array.new()
-    
 
+     puts "****WE ARE INSIDE THE RECURSIVE LOOP******"
+     puts "**********@PRESENT ARRAY: ********"
+       printArrayToConsole(@present)
+       puts "**********@BOUNDARY ARRAY********"
+       if @boundary.empty?
+        puts "*******@boundary Array is empty********"
+       else 
+        printArrayToConsole(@boundary)
+      end
+
+   @next_neighbours = Array.new()
+
+
+    puts "******FOR LOOP START****"
     for i in 0..(coordinates.length-1)
-      
 
-      current_neighbours = Array.new
+      current_neighbours = Array.new()
+      @n_id = Array.new
+   @n_names = Array.new
 
       @current_user = coordinates[i]
 
-      puts "*******Calling Search from rec"
-      puts i
-    puts @current_user 
-    puts distance
-    puts "**********@present********"
-    puts @present
-     puts "**********@boundary********"
-    puts @boundary
-    puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+     puts "*******SEARCHING FOR "+"#{i}"+"th"+"USER COORD***"
+     puts "search"+"("+"#{@current_user}"+","+","+"#{distance}"+")"
 
       search(@current_user, distance)
 
-      current_neighbours = @searchResult.map { |c| c.location.coordinates }
 
-      puts "*******current_neighbours*****"
-      puts current_neighbours
-      puts "***********************"
+      current_neighbours = @searchResult.map { |c| c.location.coordinates }
+      @n_id = @searchResult.map { |c| c.user_id }
+      puts "*******@neighbours_Names: "
+      @n_id.each do |x|
+        get_userName(x)
+        @n_names << @userName
+      end
+      puts "*******@neighbours_names:"
+      puts @n_names
+
+      puts "***CURRENT NEIGHBOURS FROM SEARCH RESULT FOR"+"#{@current_user}"
+      printArrayToConsole(current_neighbours)
+
 
       #find Uniq/new coordinates
       @uniqCoords = current_neighbours - @present
        # @uniqCoords = @present - current_neighbours
 
-      puts "*******uniqCoords*****"
-      puts @uniqCoords
-      puts "***********************"
+      puts "***UNIQUE CORDS/USERS :*****"
+      printArrayToConsole(@uniqCoords)
+     
       if @uniqCoords.empty?
-        @boundary = @searchResult.map { |c| c.location.coordinates }
-         # current_neighbours.each do |u| 
-         # @boundary << u 
-         # end       
+
+        puts "***UNIQUE CORDS ARE EMPTY ..MEANSE THE LAST SEARCH RESULTS ARE BOUNDARY ELEMENTS*****"
+         @boundaryTemp = @searchResult.map { |c| c.location.coordinates }
+         @boundaryTemp = @boundaryTemp - @boundary
+        puts "**********BOUNDARY BEFORE*********** "
+         printArrayToConsole(@boundary)
+         puts "************PUSHING BOUNDARYTEMP TO BOUNDARY "
+         printArrayToConsole(@boundaryTemp)
+        
+
+        @boundary << @current_user
+        #  @boundaryTemp.each do |u|
+        #   @boundary << u
+        # end
+         puts "***************BOUNDARY AFTER *********"
+         printArrayToConsole(@boundary)
+          # current_neighbours.each do |u| 
+          # @boundary << u 
+          # end       
       else
+        puts "********PUSHING UNIQUE COORDS INTO @PRESENT[] and @NEXT_NEIGHBOURS******"
         @uniqCoords.each do |u|
          @present << u 
          @next_neighbours << u
@@ -128,27 +232,59 @@ class UsersController < ApplicationController
       end
     end
 
+    puts "*****FOR LOOP ENDS***"
+
     if (@next_neighbours).empty?
+      puts "******NO MORE COORDINATES TO SEARCH****"
       
     else
-       puts "**********FirstRec Called********"
-    puts @next_neighbours
-    puts @distance
-    puts "888888888888888888888888888888888888888"
-      search_neighbour_rec(@next_neighbours, @distance)
+      
+      puts "NOW SEARCH FOR NEXT NEIGHBOURS"
+      puts "search_neighbour_rec"+"("+"#{@next_neighbours}"+","+"#{distance}"+")"
+      search_neighbour_rec(@next_neighbours, distance)
     end    
   end
 
+            puts " SEARCHING FIRST USER SET "
+            puts "first_userSet"+"("+"#{@currentEventCoord}"+","+"#{@distance}"+")"
+first_userSet(@currentEventCoord, @distance)
+
+
+            puts " SEARCHING NEIGHBOURS OF FIRST USER SET "
+            puts "search_neighbour_rec"+"("+"#{@present}"+","+"#{@distance}"+")"
   search_neighbour_rec(@present, @distance)
-  puts "*****Present after rec***********"
-  puts @present
+
+@polygon = Array.new
+@polygon << @finalPolygon[0]
+  @boundary.each do |x|
+    @polygon << x
+  end
+  @polygon << @finalPolygon[1]
+
+
+
+  puts "*****FINAL PRESENT ARRAY: ***********"
+  printArrayToConsole(@present)
+
+  puts "*****FINAL BOUNDARY ARRAY: ***********"
+  printArrayToConsole(@boundary)
 
 # @neighbours_coord.each do |d|
 #   @boundary << d
 # end
+@height = Array.new
+@maxHeightSet = Place.desc(:height)
+@distinctHeight = Place.all.distinct(:height) 
 
-@corkParkBoundary = [[53.361547, -6.252126], [53.361483, -6.252163], [53.361397, -6.252217], [53.361323, -6.252249], [53.361253, -6.252319], [53.361157, -6.252378], [53.361080, -6.252458], [53.360977, -6.252490], [53.360897, -6.252560], [53.360753, -6.252630], [53.360609, -6.252716], [53.360452, -6.252796], [53.360292, -6.252882], [53.360081, -6.252844], [53.360010, -6.252863], [53.359777, -6.252437], [53.359719, -6.252077], [53.359580, -6.251452], [53.359450, -6.250908], [53.359530, -6.250345], [53.359714, -6.250125], [53.359860, -6.250066], [53.359874, -6.250125], [53.360225, -6.249883], [53.360398, -6.249808], [53.360478, -6.249720], [53.360614, -6.249690], [53.360755, -6.249612], [53.360923, -6.249500], [53.360897, -6.249524]]
+@distinctHeight.each do |d|
+@height << d
+end
 
+@firstSet = Place.where(height: @height[0])
+@firstSetCoord = @firstSet.map { |e| e.location.coordinates }
+
+@secondSet = Place.where(height: @height[1])
+@secondSetCoord = @secondSet.map { |e| e.location.coordinates  }
 
 end
 
@@ -160,7 +296,9 @@ end
   # GET /users/new
   def new
     @user = User.new
-    # @place = Place.new
+    @place = Place.new
+    # @lat = request.location.latitude
+    # @lng = request.location.longitude
   end
 
   # GET /users/1/edit
@@ -171,9 +309,11 @@ end
   # POST /users.json
   def create
     @user = User.new(user_params)
+    @place = Place.last
 
     respond_to do |format|
       if @user.save
+        @user.places << @place
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else

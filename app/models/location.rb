@@ -2,9 +2,10 @@ class Location
   include Mongoid::Document
 
    field :type, type: String
-  field :coordinates, type: Array
+   field :coordinates, type: Array
+    # field :height, type: Integer
 
-  #index({coordinates: "2dsphere"})
+  
 
   embedded_in :place
 

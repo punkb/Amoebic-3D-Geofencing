@@ -1,0 +1,420 @@
+=> Booting WEBrick
+=> Rails 4.1.6 application starting in development on http://0.0.0.0:3000
+=> Run `rails server -h` for more startup options
+=> Notice: server is listening on all interfaces (0.0.0.0). Consider using 127.0.0.1 (--binding option)
+=> Ctrl-C to shutdown server
+
+
+Started GET "/" for 216.52.207.74 at 2014-11-13 03:47:54 +0000
+Processing by UsersController#show as HTML
+  MOPED: 127.0.0.1:27017 COMMAND      database=admin command={:ismaster=>1} runtime: 0.5966ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=events selector={} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.2827ms
+******************Start Event******************
+Event Name
+Croke Park
+****Event Coordinates
+-6.2515651
+53.3609245
+******************End Event******************
+ SEARCHING FIRST USER SET 
+first_userSet([-6.2515651, 53.3609245],1.5678553858657624e-06)
+****Start In first_userSet******
+first_userSet([-6.2515651, 53.3609245],1.5678553858657624e-06)
+search([-6.2515651, 53.3609245],,1.5678553858657624e-06)
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.2515651, 53.3609245], :query=>{}, :spherical=>true, :maxDistance=>1.5678553858657624e-06} runtime: 1.2287ms
+@check[[-6.2515651, 53.3609245]]
+@resultCoords[[-6.251681, 53.360971]]
+checkEmpty[[-6.251681, 53.360971]]
+****** 1 Users found withing distance = 1.5678553858657624e-06*********
+*******@neighbours_id: 
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5463df4570616e0d98000000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.6094ms
+*******@neighbours_names:
+A
+@Present before rec: = first_userset @neighbours_coord: [[[-6.251681, 53.360971]]]
+ SEARCHING NEIGHBOURS OF FIRST USER SET 
+search_neighbour_rec([[-6.251681, 53.360971]],1.5678553858657624e-06)
+****WE ARE INSIDE THE RECURSIVE LOOP******
+**********@PRESENT ARRAY: ********
+[-6.251681, 53.360971]
+**********@BOUNDARY ARRAY********
+*******@boundary Array is empty********
+******FOR LOOP START****
+*******SEARCHING FOR 0thUSER COORD***
+search([-6.251681, 53.360971],,1.5678553858657624e-06)
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.251681, 53.360971], :query=>{}, :spherical=>true, :maxDistance=>1.5678553858657624e-06} runtime: 1.3378ms
+@check[[-6.251681, 53.360971]]
+@resultCoords[[-6.251681, 53.360971]]
+checkEmpty[]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 3.135710771731525e-06
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.251681, 53.360971], :query=>{}, :spherical=>true, :maxDistance=>3.135710771731525e-06} runtime: 1.1090ms
+@check[[-6.251681, 53.360971]]
+@resultCoords[[-6.251681, 53.360971]]
+checkEmpty[]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 6.27142154346305e-06
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.251681, 53.360971], :query=>{}, :spherical=>true, :maxDistance=>6.27142154346305e-06} runtime: 1.0496ms
+@check[[-6.251681, 53.360971]]
+@resultCoords[[-6.251681, 53.360971], [-6.251853, 53.360706]]
+checkEmpty[[-6.251853, 53.360706]]
+****** 1 Users found withing distance = 6.27142154346305e-06*********
+*******@neighbours_Names: 
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5463df4570616e0d98000000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.4433ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5463df4570616e0d98030000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.4308ms
+*******@neighbours_names:
+A
+B
+***CURRENT NEIGHBOURS FROM SEARCH RESULT FOR[-6.251681, 53.360971]
+[-6.251681, 53.360971]
+[-6.251853, 53.360706]
+***UNIQUE CORDS/USERS :*****
+[-6.251853, 53.360706]
+********PUSHING UNIQUE COORDS INTO @PRESENT[] and @NEXT_NEIGHBOURS******
+*****FOR LOOP ENDS***
+NOW SEARCH FOR NEXT NEIGHBOURS
+search_neighbour_rec([[-6.251853, 53.360706]],1.5678553858657624e-06)
+****WE ARE INSIDE THE RECURSIVE LOOP******
+**********@PRESENT ARRAY: ********
+[-6.251681, 53.360971]
+[-6.251853, 53.360706]
+**********@BOUNDARY ARRAY********
+*******@boundary Array is empty********
+******FOR LOOP START****
+*******SEARCHING FOR 0thUSER COORD***
+search([-6.251853, 53.360706],,1.5678553858657624e-06)
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.251853, 53.360706], :query=>{}, :spherical=>true, :maxDistance=>1.5678553858657624e-06} runtime: 1.1825ms
+@check[[-6.251853, 53.360706]]
+@resultCoords[[-6.251853, 53.360706]]
+checkEmpty[]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 3.135710771731525e-06
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.251853, 53.360706], :query=>{}, :spherical=>true, :maxDistance=>3.135710771731525e-06} runtime: 1.0453ms
+@check[[-6.251853, 53.360706]]
+@resultCoords[[-6.251853, 53.360706]]
+checkEmpty[]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 6.27142154346305e-06
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.251853, 53.360706], :query=>{}, :spherical=>true, :maxDistance=>6.27142154346305e-06} runtime: 1.2890ms
+@check[[-6.251853, 53.360706]]
+@resultCoords[[-6.251853, 53.360706], [-6.251681, 53.360971]]
+checkEmpty[[-6.251681, 53.360971]]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 1.25428430869261e-05
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.251853, 53.360706], :query=>{}, :spherical=>true, :maxDistance=>1.25428430869261e-05} runtime: 1.5029ms
+@check[[-6.251853, 53.360706]]
+@resultCoords[[-6.251853, 53.360706], [-6.251681, 53.360971], [-6.252507, 53.36067], [-6.252287, 53.361071], [-6.252142, 53.361349]]
+checkEmpty[[-6.251681, 53.360971], [-6.252507, 53.36067], [-6.252287, 53.361071], [-6.252142, 53.361349]]
+****** 4 Users found withing distance = 1.25428430869261e-05*********
+*******@neighbours_Names: 
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5463df4570616e0d98030000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.5487ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5463df4570616e0d98000000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.7114ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5464216170616e0d980c0000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 1.0742ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5464269770616e0d98120000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.6514ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5464216070616e0d98060000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.9226ms
+*******@neighbours_names:
+B
+A
+Z
+Y
+X
+***CURRENT NEIGHBOURS FROM SEARCH RESULT FOR[-6.251853, 53.360706]
+[-6.251853, 53.360706]
+[-6.251681, 53.360971]
+[-6.252507, 53.36067]
+[-6.252287, 53.361071]
+[-6.252142, 53.361349]
+***UNIQUE CORDS/USERS :*****
+[-6.252507, 53.36067]
+[-6.252287, 53.361071]
+[-6.252142, 53.361349]
+********PUSHING UNIQUE COORDS INTO @PRESENT[] and @NEXT_NEIGHBOURS******
+*****FOR LOOP ENDS***
+NOW SEARCH FOR NEXT NEIGHBOURS
+search_neighbour_rec([[-6.252507, 53.36067], [-6.252287, 53.361071], [-6.252142, 53.361349]],1.5678553858657624e-06)
+****WE ARE INSIDE THE RECURSIVE LOOP******
+**********@PRESENT ARRAY: ********
+[-6.251681, 53.360971]
+[-6.251853, 53.360706]
+[-6.252507, 53.36067]
+[-6.252287, 53.361071]
+[-6.252142, 53.361349]
+**********@BOUNDARY ARRAY********
+*******@boundary Array is empty********
+******FOR LOOP START****
+*******SEARCHING FOR 0thUSER COORD***
+search([-6.252507, 53.36067],,1.5678553858657624e-06)
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252507, 53.36067], :query=>{}, :spherical=>true, :maxDistance=>1.5678553858657624e-06} runtime: 1.3355ms
+@check[[-6.252507, 53.36067]]
+@resultCoords[[-6.252507, 53.36067]]
+checkEmpty[]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 3.135710771731525e-06
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252507, 53.36067], :query=>{}, :spherical=>true, :maxDistance=>3.135710771731525e-06} runtime: 1.6619ms
+@check[[-6.252507, 53.36067]]
+@resultCoords[[-6.252507, 53.36067]]
+checkEmpty[]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 6.27142154346305e-06
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252507, 53.36067], :query=>{}, :spherical=>true, :maxDistance=>6.27142154346305e-06} runtime: 1.0748ms
+@check[[-6.252507, 53.36067]]
+@resultCoords[[-6.252507, 53.36067]]
+checkEmpty[]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 1.25428430869261e-05
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252507, 53.36067], :query=>{}, :spherical=>true, :maxDistance=>1.25428430869261e-05} runtime: 1.2373ms
+@check[[-6.252507, 53.36067]]
+@resultCoords[[-6.252507, 53.36067], [-6.251853, 53.360706], [-6.252287, 53.361071], [-6.251681, 53.360971], [-6.252142, 53.361349]]
+checkEmpty[[-6.251853, 53.360706], [-6.252287, 53.361071], [-6.251681, 53.360971], [-6.252142, 53.361349]]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 2.50856861738522e-05
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252507, 53.36067], :query=>{}, :spherical=>true, :maxDistance=>2.50856861738522e-05} runtime: 1.0992ms
+@check[[-6.252507, 53.36067]]
+@resultCoords[[-6.252507, 53.36067], [-6.251853, 53.360706], [-6.252287, 53.361071], [-6.251681, 53.360971], [-6.252142, 53.361349]]
+checkEmpty[[-6.251853, 53.360706], [-6.252287, 53.361071], [-6.251681, 53.360971], [-6.252142, 53.361349]]
+*********SEARCH RESULT IS EMPTY********
+*******@neighbours_Names: 
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5464216170616e0d980c0000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.7806ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5463df4570616e0d98030000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.7310ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5464269770616e0d98120000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 1.0113ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5463df4570616e0d98000000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.4305ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5464216070616e0d98060000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.5536ms
+*******@neighbours_names:
+Z
+B
+Y
+A
+X
+***CURRENT NEIGHBOURS FROM SEARCH RESULT FOR[-6.252507, 53.36067]
+[-6.252507, 53.36067]
+[-6.251853, 53.360706]
+[-6.252287, 53.361071]
+[-6.251681, 53.360971]
+[-6.252142, 53.361349]
+***UNIQUE CORDS/USERS :*****
+***UNIQUE CORDS ARE EMPTY ..MEANSE THE LAST SEARCH RESULTS ARE BOUNDARY ELEMENTS*****
+*******SEARCHING FOR 1thUSER COORD***
+search([-6.252287, 53.361071],,1.5678553858657624e-06)
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252287, 53.361071], :query=>{}, :spherical=>true, :maxDistance=>1.5678553858657624e-06} runtime: 1.0997ms
+@check[[-6.252287, 53.361071]]
+@resultCoords[[-6.252287, 53.361071]]
+checkEmpty[]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 3.135710771731525e-06
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252287, 53.361071], :query=>{}, :spherical=>true, :maxDistance=>3.135710771731525e-06} runtime: 1.5907ms
+@check[[-6.252287, 53.361071]]
+@resultCoords[[-6.252287, 53.361071]]
+checkEmpty[]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 6.27142154346305e-06
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252287, 53.361071], :query=>{}, :spherical=>true, :maxDistance=>6.27142154346305e-06} runtime: 1.2862ms
+@check[[-6.252287, 53.361071]]
+@resultCoords[[-6.252287, 53.361071], [-6.252142, 53.361349]]
+checkEmpty[[-6.252142, 53.361349]]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 1.25428430869261e-05
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252287, 53.361071], :query=>{}, :spherical=>true, :maxDistance=>1.25428430869261e-05} runtime: 1.4483ms
+@check[[-6.252287, 53.361071]]
+@resultCoords[[-6.252287, 53.361071], [-6.252142, 53.361349], [-6.251681, 53.360971], [-6.252507, 53.36067], [-6.251853, 53.360706]]
+checkEmpty[[-6.252142, 53.361349], [-6.251681, 53.360971], [-6.252507, 53.36067], [-6.251853, 53.360706]]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 2.50856861738522e-05
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252287, 53.361071], :query=>{}, :spherical=>true, :maxDistance=>2.50856861738522e-05} runtime: 1.8934ms
+@check[[-6.252287, 53.361071]]
+@resultCoords[[-6.252287, 53.361071], [-6.252142, 53.361349], [-6.251681, 53.360971], [-6.252507, 53.36067], [-6.251853, 53.360706]]
+checkEmpty[[-6.252142, 53.361349], [-6.251681, 53.360971], [-6.252507, 53.36067], [-6.251853, 53.360706]]
+*********SEARCH RESULT IS EMPTY********
+*******@neighbours_Names: 
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5464269770616e0d98120000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 1.1008ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5464216070616e0d98060000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.6986ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5463df4570616e0d98000000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.6714ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5464216170616e0d980c0000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.9635ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5463df4570616e0d98030000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.4180ms
+*******@neighbours_names:
+Y
+X
+A
+Z
+B
+***CURRENT NEIGHBOURS FROM SEARCH RESULT FOR[-6.252287, 53.361071]
+[-6.252287, 53.361071]
+[-6.252142, 53.361349]
+[-6.251681, 53.360971]
+[-6.252507, 53.36067]
+[-6.251853, 53.360706]
+***UNIQUE CORDS/USERS :*****
+***UNIQUE CORDS ARE EMPTY ..MEANSE THE LAST SEARCH RESULTS ARE BOUNDARY ELEMENTS*****
+*******SEARCHING FOR 2thUSER COORD***
+search([-6.252142, 53.361349],,1.5678553858657624e-06)
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252142, 53.361349], :query=>{}, :spherical=>true, :maxDistance=>1.5678553858657624e-06} runtime: 1.6569ms
+@check[[-6.252142, 53.361349]]
+@resultCoords[[-6.252142, 53.361349]]
+checkEmpty[]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 3.135710771731525e-06
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252142, 53.361349], :query=>{}, :spherical=>true, :maxDistance=>3.135710771731525e-06} runtime: 1.6290ms
+@check[[-6.252142, 53.361349]]
+@resultCoords[[-6.252142, 53.361349]]
+checkEmpty[]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 6.27142154346305e-06
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252142, 53.361349], :query=>{}, :spherical=>true, :maxDistance=>6.27142154346305e-06} runtime: 1.6380ms
+@check[[-6.252142, 53.361349]]
+@resultCoords[[-6.252142, 53.361349], [-6.252287, 53.361071]]
+checkEmpty[[-6.252287, 53.361071]]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 1.25428430869261e-05
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252142, 53.361349], :query=>{}, :spherical=>true, :maxDistance=>1.25428430869261e-05} runtime: 1.6358ms
+@check[[-6.252142, 53.361349]]
+@resultCoords[[-6.252142, 53.361349], [-6.252287, 53.361071], [-6.251681, 53.360971], [-6.251853, 53.360706], [-6.252507, 53.36067]]
+checkEmpty[[-6.252287, 53.361071], [-6.251681, 53.360971], [-6.251853, 53.360706], [-6.252507, 53.36067]]
+*********SEARCH RESULT IS EMPTY********
+******* Now Searching for distance: 2.50856861738522e-05
+  MOPED: 127.0.0.1:27017 COMMAND      database=amoebicgeofenceNoGeoSpatial_development command={:geoNear=>"places", :near=>[-6.252142, 53.361349], :query=>{}, :spherical=>true, :maxDistance=>2.50856861738522e-05} runtime: 1.8828ms
+@check[[-6.252142, 53.361349]]
+@resultCoords[[-6.252142, 53.361349], [-6.252287, 53.361071], [-6.251681, 53.360971], [-6.251853, 53.360706], [-6.252507, 53.36067]]
+checkEmpty[[-6.252287, 53.361071], [-6.251681, 53.360971], [-6.251853, 53.360706], [-6.252507, 53.36067]]
+*********SEARCH RESULT IS EMPTY********
+*******@neighbours_Names: 
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5464216070616e0d98060000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.4727ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5464269770616e0d98120000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.6875ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5463df4570616e0d98000000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.6422ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5463df4570616e0d98030000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.3584ms
+  MOPED: 127.0.0.1:27017 QUERY        database=amoebicgeofenceNoGeoSpatial_development collection=users selector={"_id"=>BSON::ObjectId('5464216170616e0d980c0000')} flags=[] limit=0 skip=0 batch_size=nil fields=nil runtime: 0.3999ms
+*******@neighbours_names:
+X
+Y
+A
+B
+Z
+***CURRENT NEIGHBOURS FROM SEARCH RESULT FOR[-6.252142, 53.361349]
+[-6.252142, 53.361349]
+[-6.252287, 53.361071]
+[-6.251681, 53.360971]
+[-6.251853, 53.360706]
+[-6.252507, 53.36067]
+***UNIQUE CORDS/USERS :*****
+***UNIQUE CORDS ARE EMPTY ..MEANSE THE LAST SEARCH RESULTS ARE BOUNDARY ELEMENTS*****
+*****FOR LOOP ENDS***
+******NO MORE COORDINATES TO SEARCH****
+*****FINAL PRESENT ARRAY: ***********
+[-6.251681, 53.360971]
+[-6.251853, 53.360706]
+[-6.252507, 53.36067]
+[-6.252287, 53.361071]
+[-6.252142, 53.361349]
+*****FINAL BOUNDARY ARRAY: ***********
+[-6.252142, 53.361349]
+[-6.252287, 53.361071]
+[-6.251681, 53.360971]
+[-6.251853, 53.360706]
+[-6.252507, 53.36067]
+  Rendered users/show.html.erb within layouts/application (3.2ms)
+Completed 200 OK in 558ms (Views: 402.5ms)
+
+
+Started GET "/assets/places.css?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/users.css?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/jquery.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/jquery_ujs.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/application.css?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/scaffolds.css?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/turbolinks.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/underscore.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/base.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/base/base.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/objects/base_builder.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/objects/builder.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/objects/handler.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/objects/null_clusterer.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/builders/bound.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/objects/common.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/builders/circle.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/builders/clusterer.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/builders/kml.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/builders/map.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/builders/marker.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/builders/polygon.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/builders/polyline.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/objects/bound.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/objects/circle.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/objects/clusterer.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/objects/kml.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:55 +0000
+
+
+Started GET "/assets/gmaps/google/objects/map.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:56 +0000
+
+
+Started GET "/assets/gmaps/google/objects/marker.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:56 +0000
+
+
+Started GET "/assets/gmaps/google/objects/polygon.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:56 +0000
+
+
+Started GET "/assets/gmaps/google/objects/polyline.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:56 +0000
+
+
+Started GET "/assets/gmaps/google/primitives.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:56 +0000
+
+
+Started GET "/assets/gmaps/google.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:56 +0000
+
+
+Started GET "/assets/location.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:56 +0000
+
+
+Started GET "/assets/places.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:56 +0000
+
+
+Started GET "/assets/users.js?body=1" for 216.52.207.74 at 2014-11-13 03:47:56 +0000

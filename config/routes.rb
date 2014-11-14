@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'places/create'
+
+  get 'places/update'
+
   resources :users
 
   # The priority is based upon order of creation: first created -> highest priority.

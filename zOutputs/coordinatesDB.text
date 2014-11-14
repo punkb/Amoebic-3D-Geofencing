@@ -1,0 +1,68 @@
+
+
+
+
+coords = [[53.360971, -6.251681], [53.360706, -6.251853]]
+coords = coords.map{|x| x.reverse}
+names = ["A", "B"]
+
+   for i in 0..coords.length-1
+   User.create(name:names[i])
+   a = User.last
+   a.places << Place.create(location:{ type: "Point", coordinates:coords[i]}, height:0.0  )
+   a.save
+   end
+
+  5 Users
+
+  coords = [[53.361349,-6.252142], [53.361071, -6.252287], [53.360670, -6.252507]]
+  coords = coords.map{|x| x.reverse}
+  names = ["X", "Y", "Z"]
+
+  6 Users 
+  coords = [[53.360766, -6.252244]]
+  names = ["Q"]
+
+   7 Users 
+  coords = [[53.360456, -6.252014]]
+  coords = coords.map{|x| x.reverse}
+  names = ["C"]
+
+  8 Users 
+
+   coords = [[53.360421, -6.252808]]
+  coords = coords.map{|x| x.reverse}
+  names = ["P"]
+
+9 users
+coords = [[53.360912, -6.251926]]
+coords = coords.map{|x| x.reverse}
+  names = ["AB"]
+
+
+
+10 users
+coords = [[53.360787, -6.251984]]
+coords = coords.map{|x| x.reverse}
+  names = ["YQ"]
+
+  11 users
+
+  coords = [[53.360702, -6.252086]]
+  coords = coords.map{|x| x.reverse}
+  names = ["BQ"]
+
+  
+
+  12 Users
+
+  coords = [[53.360656, -6.251920]]
+  coords = coords.map{|x| x.reverse}
+  names = ["BC"]
+
+  13 users
+
+  
+  coords = [[53.361125, -6.251952]]
+  coords = coords.map{|x| x.reverse}
+  names = ["AX"]

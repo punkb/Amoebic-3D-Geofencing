@@ -22,21 +22,37 @@
 
 
 <h3>Boundary Users</h3>
-<%= @boundary %>
+<%= @polygon %>
 
+<h4>Boundary Length</h4>
+<%= @polygon.length%>
 
-
-<%= @boundary%>
+<h4>Skipped Users</h4>
+<%= @present - @polygon%>
 
 <h3>@Present</h3>
 <%= @f = @present.map{|d| d.reverse}%>
-<%= @f = @f.map{|lat, long| {lat: lat, lng: long} }%>
+<%= @f = @f.map{|lat, long, infowindow| {lat: lat, lng: long, infowindow: ([lat, long]).to_s} }%>
 
 <h3>Boundar Hash</h3>
-
-<% @c = @boundary.map{|d| d.reverse}%>
-
+<% @c = @polygon.map{|d| d.reverse}%>
 <%= @c = @c.map{|lat, long| {lat: lat, lng: long}} %>
+
+<h3>Height Data</h3>
+<% @maxHeightSet.each do |h| %>
+<%= h.location.coordinates %>
+<%= h.height %>
+<%end%>
+
+<h4>DistinctHeight</h4>
+<%@distinctHeight.each do |d|%>
+<%= d %>
+<%end%>
+
+<h3>Outter</h3>
+<% @out = @secondSetCoord.map{|d| d.reverse}%>
+
+<%= @out = @out.map{|lat, long| {lat: lat, lng: long}} %>
 
 
 
@@ -76,32 +92,56 @@
 <script type="text/javascript">
 // var myData = <%= raw json_escape(@fakeData.to_json) %>;
 var myData = <%= @c.to_json.html_safe %>
+var outData = <%= @out.to_json.html_safe %>
+var usersData = <%= @f.to_json.html_safe %>
 
 
 	var handler = Gmaps.build('Google');
 handler.buildMap({ internal: {id: 'multi_overlays'}}, function(){
 
 
-  var polygons = handler.addPolygons(
+  var innerpolygons = handler.addPolygons(
     [
     myData
-       // [
-       //  // { lat: 53.352475, lng: -6.228275}, 
-       //  // { lat: 53.352480, lng: -6.228277}, 
-       //  // { lat: 53.352847, lng: -6.228101}
-       //  {lat: 53.353762, lng: -6.227431}, 
-       //  {lat: 53.353584, lng: -6.227012}, 
-         
-       //  {lat: 53.353318, lng: -6.227357},
-       //  {lat: 53.353546, lng: -6.227901},
-       //  {lat: 53.353762, lng: -6.227431}
-       //  ]
     ],
     { strokeColor: '#FF0000'}
   );
 
+  // var outerpolygons = handler.addPolygons(
+  //   [
+  //   outData
+  //   ],
+  //   { strokeColor: '#FF0000'}
+  // );
+// markers = handler.addMarkers([
+//     {
+//       lat: 53.3609245,
+//       lng: -6.251565,
+//       picture: {
+//         url: "https://addons.cdn.mozilla.net/img/uploads/addon_icons/13/13028-64.png",
+//         width:  36,
+//         height: 36
+//       },
+//       infowindow: "hello!"
+//     }
+//   ]);
+
+
+  var markers = handler.addMarkers(
+    usersData
+
+    );
+  handler.bounds.extendWith(markers);
+  handler.fitMapToBounds();
+
+
+
+
+
+
   // handler.bounds.extendWith(polylines);
-  handler.bounds.extendWith(polygons);
+   handler.bounds.extendWith(innerpolygons);
+  // handler.bounds.extendWith(outerpolygons);
   // handler.bounds.extendWith(circles);
   handler.fitMapToBounds();
 });
