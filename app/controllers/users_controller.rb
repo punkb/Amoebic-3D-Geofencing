@@ -16,10 +16,14 @@ class UsersController < ApplicationController
 
   # @test = Place.geo_near([-6.2515651, 53.3609245]).spherical.average_distance
 
+@bsonPresent = Array.new
+@heightAll = Array.new
+
    #Event Section Start
    @events = Event.all
    @eTitle = Array.new
    @eCoord = Array.new
+
 
    @events.each do |e|
     @eTitle << e.name
@@ -89,6 +93,14 @@ class UsersController < ApplicationController
       puts "******"+" #{checkEmpty.length} "+"Users found withing distance = "+"#{@distInMeter}"+"meters"+"*********"
       @distInMeter = 5
 
+
+
+      @searchResult.map { |e| @bsonPresent << e  }
+       @bsonPresent = @bsonPresent.uniq
+      @bsonPresent.map { |e| @heightAll << e.height  }
+     
+
+
       return @searchResult
     end
     @distInMeter = 5
@@ -123,7 +135,7 @@ class UsersController < ApplicationController
       @names = Array.new
       @neighbours_coord = @searchResult.map { |c| c.location.coordinates}
       @neighbours_height = @searchResult.map { |c| c.height }
-      
+
       @neighbours_id = @searchResult.map { |c| c.user_id }
       puts "*******@neighbours_id: "
       @neighbours_id.each do |x|
@@ -286,6 +298,85 @@ end
 @secondSet = Place.where(height: @height[1])
 @secondSetCoord = @secondSet.map { |e| e.location.coordinates  }
 
+
+#New Logic
+
+
+      @heightLimits = @heightAll.uniq
+      @minHeight = @heightAll.min
+      @maxHeight = @heightAll.max
+
+      @bsonHash = @bsonPresent.map { | place, user_id, height| {lat: place.location.coordinates[1], 
+                                                                      lng: place.location.coordinates[0],
+                                                                      alt: place.height}}
+
+
+    
+      # @groupedArray = @bsonHash.group_by{|x| "alt_#{x['alt']}".values}
+        @groupedArray = @bsonHash.group_by{|x| x[:alt]}.values
+        @minHeightArray = @groupedArray[0]
+        @maxHeightArray = @groupedArray[1]
+
+        @minHeightArray << @minHeightArray[0]
+        @maxHeightArray << @maxHeightArray[0]
+
+        @points = Array.new
+        @points2 = Array.new
+
+        # @minHeightArray.each do |p|
+        #    p = p.tap {|hs| hs.delete(:alt)}
+        #   @points << p.values.reverse
+        # end
+
+        #due to tap alt values are not in the hash anymore
+
+        @minHeightArray.map { |e| @points << (e.tap {|hs| hs.delete(:alt)}).values.reverse  }
+        @maxHeightArray.map { |e| @points2 << (e.tap {|hs| hs.delete(:alt)}).values.reverse  }
+
+      
+
+      def convex_hull(points)
+        points.sort!.uniq!
+        return points if points.length < 3
+        def cross(o, a, b)
+    (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+  end
+    @lower = Array.new
+  points.each{|p|
+    while @lower.length > 1 and cross(@lower[-2], @lower[-1], p) <= 0 do @lower.pop end
+    @lower.push(p)
+  }
+  @upper = Array.new
+  points.reverse_each{|p|
+    while @upper.length > 1 and cross(@upper[-2], @upper[-1], p) <= 0 do @upper.pop end
+    @upper.push(p)
+  }
+  @lower_upper = @lower[0...-1] + @upper[0...-1]
+  @convexHash = @lower_upper.map{|d| d.reverse}
+ 
+  return @convexHash
+        
+  end
+
+      convex_hull(@points)
+      
+      @innerPolygon =  @convexHash.map{|lat, long| {lat: lat, lng: long}}
+     
+
+      
+      convex_hull(@points2)
+      @outterPolygon =  @convexHash.map{|lat, long| {lat: lat, lng: long}}
+
+      
+
+
+
+
+
+
+
+
+#End of SHOW
 end
 
 

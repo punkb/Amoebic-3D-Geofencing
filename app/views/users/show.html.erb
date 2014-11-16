@@ -11,6 +11,47 @@
   <%= @currentEventCoord %>
 </br>
 
+<h3>HEIGHT ALL ARRAY</h3>
+<%= @heightLimits%>
+<%= @minHeight%>
+<%= @maxHeight%></br>
+
+
+
+<h3>Point Array</h3>
+<%= @points%>
+<h3>@lower</h3>
+<%= @lower%>
+<h3>@upper</h3>
+<%= @upper%>
+<h3>@Lower_Upper</h3>
+<%= @innerPolygon%>
+<%= @outterPolygon%>
+
+
+
+<h4>Min Height ArrayHash</h4>
+<%= @minHeightArray%></br>
+<%= @minHeightArray.length%>
+
+
+<h4>Max Height Array</h4>
+<%= @maxHeightArray%></br>
+<%= @maxHeightArray.length%>
+
+<h4>Grouped Array</h4>
+
+<%= @groupedArray%>
+
+
+
+
+<h3>BSON DATA</h3>
+<%= @bsonPresent%>
+
+<h3>BsonHash</h3>
+<%= @bsonHash %>
+
 <h3>First User Details </h3>
 <%= @neighbours_coord %>
 
@@ -35,7 +76,7 @@
 <%= @f = @f.map{|lat, long, infowindow| {lat: lat, lng: long, infowindow: ([lat, long]).to_s} }%>
 
 <h3>Boundar Hash</h3>
-<% @c = @polygon.map{|d| d.reverse}%>
+<% @c = @lower_upper.map{|d| d.reverse}%>
 <%= @c = @c.map{|lat, long| {lat: lat, lng: long}} %>
 
 <h3>Height Data</h3>
@@ -53,6 +94,8 @@
 <% @out = @secondSetCoord.map{|d| d.reverse}%>
 
 <%= @out = @out.map{|lat, long| {lat: lat, lng: long}} %>
+
+
 
 
 
@@ -92,7 +135,8 @@
 <script type="text/javascript">
 // var myData = <%= raw json_escape(@fakeData.to_json) %>;
 var myData = <%= @c.to_json.html_safe %>
-var outData = <%= @out.to_json.html_safe %>
+var innerData = <%= @innerPolygon.to_json.html_safe %>
+var outerData = <%= @outterPolygon.to_json.html_safe %>
 var usersData = <%= @f.to_json.html_safe %>
 
 
@@ -102,17 +146,17 @@ handler.buildMap({ internal: {id: 'multi_overlays'}}, function(){
 
   var innerpolygons = handler.addPolygons(
     [
-    myData
+    innerData
     ],
     { strokeColor: '#FF0000'}
   );
 
-  // var outerpolygons = handler.addPolygons(
-  //   [
-  //   outData
-  //   ],
-  //   { strokeColor: '#FF0000'}
-  // );
+  var outerpolygons = handler.addPolygons(
+    [
+    outerData
+    ],
+    { strokeColor: '#FF0000'}
+  );
 // markers = handler.addMarkers([
 //     {
 //       lat: 53.3609245,
