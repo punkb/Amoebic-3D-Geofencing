@@ -26,8 +26,8 @@ var lng = position.coords.longitude;
 // document.getElementById("locationData").innerHTML = displayText;
 // $.post('/place',{lat:position.coords.latitude, lng:position.coords.longitude});
 $.post('/places/create',{lat: position.coords.latitude, 
-						 lng: position.coords.longitude 
-						 // alt:position.coords.altitude,
+						 lng: position.coords.longitude, 
+						  alt:position.coords.altitude
 						 // time:a
 						});
 

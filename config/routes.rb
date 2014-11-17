@@ -1,8 +1,13 @@
 Rails.application.routes.draw do
+  resources :events
+
  get 'places/create'
   post 'places/create'
 
-  get 'places/upadate'
+  get 'places/update'
+  get 'places/createevent'
+  post 'places/createevent'
+  get 'places/showevent'
 
   resources :users
 
@@ -10,7 +15,7 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'users#show'
+  root 'events#home'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

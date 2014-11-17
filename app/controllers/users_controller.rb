@@ -9,28 +9,30 @@ class UsersController < ApplicationController
 
   # GET /users/1
   # GET /users/1.json
- def show
+ 
+def show
+  
+end
+ def showOld
 
- # @test = Place.where(:"location.height".gt => 5)
- # @test = @test.map { |e| e.location.coordinates  }
-
-  # @test = Place.geo_near([-6.2515651, 53.3609245]).spherical.average_distance
 
 @bsonPresent = Array.new
 @heightAll = Array.new
 
    #Event Section Start
-   @events = Event.all
+   @events = Event.where(name:"Croke Park")
    @eTitle = Array.new
    @eCoord = Array.new
 
 
    @events.each do |e|
-    @eTitle << e.name
-    @eCoord << e.location
+    @eTitle = e.name
+    @eCoord = e.coordinates
    end
-    @currentEvent = @eTitle[1]
-    @currentEventCoord = @eCoord[1] #Event Coordinate to search first set of users
+    @currentEvent = @eTitle
+    # @currentEventCoord = Array.new
+
+     @currentEventCoord = @eCoord #Event Coordinate to search first set of users
 
     puts "******************Start Event******************"
     puts "Event Name"
@@ -46,7 +48,7 @@ class UsersController < ApplicationController
     @presentName = Array.new
     @boundary = Array.new
     @fixDist = 5/6378139.266
-      @distance = 5/6378139.266
+      @distance = 10/6378139.266
       @distInMeter = 5
       #0.00000016
      # @distance = 0.00001
@@ -286,17 +288,23 @@ first_userSet(@currentEventCoord, @distance)
 # end
 @height = Array.new
 @maxHeightSet = Place.desc(:height)
-@distinctHeight = Place.all.distinct(:height) 
+@maxHeightSetAtEvent = (@bsonPresent & @maxHeightSet).map { |e| @height << e  }
 
-@distinctHeight.each do |d|
-@height << d
-end
+@distinctHeight = @height.uniq
+# @distinctHeight = Place.all.distinct(:height) 
 
-@firstSet = Place.where(height: @height[0])
-@firstSetCoord = @firstSet.map { |e| e.location.coordinates }
+# @distinctHeight.each do |d|
+# @height << d
+# end
 
-@secondSet = Place.where(height: @height[1])
-@secondSetCoord = @secondSet.map { |e| e.location.coordinates  }
+puts "***************@HEIGHT***********"
+puts "#{@height}"
+
+# @firstSet = Place.where(height: @height[0])
+# @firstSetCoord = @firstSet.map { |e| e.location.coordinates }
+
+# @secondSet = Place.where(height: @height[1])
+# @secondSetCoord = @secondSet.map { |e| e.location.coordinates  }
 
 
 #New Logic
@@ -336,27 +344,27 @@ end
       
 
       def convex_hull(points)
-        points.sort!.uniq!
-        return points if points.length < 3
-        def cross(o, a, b)
-    (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
-  end
-    @lower = Array.new
-  points.each{|p|
-    while @lower.length > 1 and cross(@lower[-2], @lower[-1], p) <= 0 do @lower.pop end
-    @lower.push(p)
-  }
-  @upper = Array.new
-  points.reverse_each{|p|
-    while @upper.length > 1 and cross(@upper[-2], @upper[-1], p) <= 0 do @upper.pop end
-    @upper.push(p)
-  }
-  @lower_upper = @lower[0...-1] + @upper[0...-1]
-  @convexHash = @lower_upper.map{|d| d.reverse}
- 
-  return @convexHash
-        
-  end
+              points.sort!.uniq!
+              return points if points.length < 3
+              def cross(o, a, b)
+          (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+        end
+          @lower = Array.new
+        points.each{|p|
+          while @lower.length > 1 and cross(@lower[-2], @lower[-1], p) <= 0 do @lower.pop end
+          @lower.push(p)
+        }
+        @upper = Array.new
+        points.reverse_each{|p|
+          while @upper.length > 1 and cross(@upper[-2], @upper[-1], p) <= 0 do @upper.pop end
+          @upper.push(p)
+        }
+        @lower_upper = @lower[0...-1] + @upper[0...-1]
+        @convexHash = @lower_upper.map{|d| d.reverse}
+       
+        return @convexHash
+              
+    end
 
       convex_hull(@points)
 
