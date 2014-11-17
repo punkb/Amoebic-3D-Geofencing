@@ -3,7 +3,7 @@ class Location
 
    field :type, type: String
    field :coordinates, type: Array
-    # field :height, type: Integer
+   
 
   
 

@@ -78,7 +78,7 @@ class UsersController < ApplicationController
      puts "checkEmpty"+"#{checkEmpty}"
     if checkEmpty.empty? || (checkEmpty-@present).length < 2 
       puts "*********SEARCH RESULT IS EMPTY********"
-        if distance <= 80/6378139.266
+        if distance <= 100/6378139.266
           distance = (distance+@fixDist)
           @distInMeter += 5
 
@@ -359,7 +359,7 @@ end
   end
 
       convex_hull(@points)
-      
+
       @innerPolygon =  @convexHash.map{|lat, long| {lat: lat, lng: long}}
      
 
@@ -387,7 +387,7 @@ end
   # GET /users/new
   def new
     @user = User.new
-    @place = Place.new
+   @place = Place.new
     # @lat = request.location.latitude
     # @lng = request.location.longitude
   end

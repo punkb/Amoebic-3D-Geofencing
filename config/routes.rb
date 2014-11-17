@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
-  get 'places/create'
+ get 'places/create'
+  post 'places/create'
 
-  get 'places/update'
+  get 'places/upadate'
 
   resources :users
 

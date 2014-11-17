@@ -174,4 +174,69 @@ search_rec(@distance, @temp)
 
   end
 
-  ************************************
+  ************************************View ****************
+  
+<h4>Min Height ArrayHash</h4>
+<%= @minHeightArray%></br>
+<%= @minHeightArray.length%>
+
+
+<h4>Max Height Array</h4>
+<%= @maxHeightArray%></br>
+<%= @maxHeightArray.length%>
+
+<h4>Grouped Array</h4>
+
+<%= @groupedArray%>
+
+
+
+
+<h3>BSON DATA</h3>
+<%= @bsonPresent%>
+
+<h3>BsonHash</h3>
+<%= @bsonHash %>
+
+<h3>First User Details </h3>
+<%= @neighbours_coord %>
+
+<h3>Present Users</h3>
+<%= @present%>
+
+<h3>Present Length</h3>
+<%= @present.length%>
+
+
+<h3>Boundary Users</h3>
+<%= @polygon %>
+
+<h4>Boundary Length</h4>
+<%= @polygon.length%>
+
+<h4>Skipped Users</h4>
+<%= @present - @polygon%>
+
+<h3>@Present</h3>
+<%= @f = @present.map{|d| d.reverse}%>
+<%= @f = @f.map{|lat, long, infowindow| {lat: lat, lng: long, infowindow: ([lat, long]).to_s} }%>
+
+<h3>Boundar Hash</h3>
+<% @c = @lower_upper.map{|d| d.reverse}%>
+<%= @c = @c.map{|lat, long| {lat: lat, lng: long}} %>
+
+<h3>Height Data</h3>
+<% @maxHeightSet.each do |h| %>
+<%= h.location.coordinates %>
+<%= h.height %>
+<%end%>
+
+<h4>DistinctHeight</h4>
+<%@distinctHeight.each do |d|%>
+<%= d %>
+<%end%>
+
+<h3>Outter</h3>
+<% @out = @secondSetCoord.map{|d| d.reverse}%>
+
+<%= @out = @out.map{|lat, long| {lat: lat, lng: long}} %>

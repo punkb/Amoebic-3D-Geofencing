@@ -1,109 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="//maps.google.com/maps/api/js?v=3.13&amp;sensor=false&amp;libraries=geometry" type="text/javascript"></script>
-<script src='//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js' type='text/javascript'></script>
-<script>
-/*Location functions here*/
-
-function getUserLocation() { 
-
-//check if the geolocation object is supported, if so get position
-if (navigator.geolocation)
-	navigator.geolocation.getCurrentPosition(showMap, displayError, {enableHighAccuracy: true});
-else
-	document.getElementById("locationData").innerHTML = "Sorry - your browser doesn't support geolocation!";
-}
-
-function displayLocation(position) { 
-
-//build text string including co-ordinate data passed in parameter
-var displayText = "User latitude is " + position.coords.latitude + " longitude is " + position.coords.longitude + " and altitude is " + position.coords.altitude ;
-
-var loc = [[position.coords.latitude, position.coords.longitude][position.coords.altitude]]
-
-//display the string for demonstration
-document.getElementById("locationData").innerHTML = displayText;
-}
-
-
-function displayError(error) { 
-
-//get a reference to the HTML element for writing result
-var locationElement = document.getElementById("locationData");
-
-//find out which error we have, output message accordingly
-switch(error.code) {
-case error.PERMISSION_DENIED:
-	locationElement.innerHTML = "Permission was denied";
-	break;
-case error.POSITION_UNAVAILABLE:
-	locationElement.innerHTML = "Location data not available";
-	break;
-case error.TIMEOUT:
-	locationElement.innerHTML = "Location request timeout";
-	break;
-case error.UNKNOWN_ERROR:
-	locationElement.innerHTML = "An unspecified error occurred";
-	break;
-default:
-	locationElement.innerHTML = "Who knows what happened...";
-	break;
-}}
-
-
-
-function showMap (position) {
-	
-handler = Gmaps.build('Google');
-handler.buildMap({ internal: {id: 'map'}}, function(){
-  markers = handler.addMarkers([
-    {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-      // picture: {
-      //   url: "https://addons.cdn.mozilla.net/img/uploads/addon_icons/13/13028-64.png",
-      //   width:  36,
-      //   height: 36
-      // },
-      infowindow: position.coords.latitude 
-    }
-  ]);
-});
-}
-
-</script>
-
-<script type="text/javascript">
-	$( document ).ready(function() {
-    getUserLocation();
-    displayLocation(position);
-});
-</script>
+  
+<%= javascript_include_tag "location", "data-turbolinks-track" => true %>
 
 </head>
 
+<div id = "locationData">
+
+</div>
+
+<script type="text/javascript">
+  window.onload = getUserLocation(); 
+
+</script>
+
+
 <body>
 
-<h1>New user</h1>
+h1>New user</h1>
 
-<%= render 'form' %>
+<%= form_for(@user) do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
 
 <%= link_to 'Back', users_path %>
 
-<input type="button" value="get location" onclick="getUserLocation()"/>
-<div id="locationData">
 
-</div>
-
-<div style='width: 800px;'>
-  <div id="map" style='width: 800px; height: 400px;'></div>
-</div>
-
-
-<h3>LAT</h3>
-<%= @lat %>
-<%= @lng %>
 
 </body>
 </html>
