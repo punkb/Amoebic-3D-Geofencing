@@ -1,10 +1,15 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: [:show, :edit, :update, :destroy]
+   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
   # GET /events
   # GET /events.json
   def index
     @events = Event.all
+  end
+
+  def test
+
+@events = Event.all    
   end
 
   # GET /events/1
@@ -54,8 +59,7 @@ class EventsController < ApplicationController
             end
           
         else
-          puts "******"+" #{checkEmpty.length} "+"Users found withing distance = "+"#{@distInMeter}"+"meters"+"*********"
-          @distInMeter = 5
+           @distInMeter = 5
 
           #Pushing all BSON data from SearchResult to @bsonPresent
           @searchResult.map { |e| @bsonPresent << e  }
@@ -82,9 +86,7 @@ class EventsController < ApplicationController
         @present = @neighbours_coord
         # @finalPolygon = @neighbours_coord
       end
-    end
-
-    first_userSet(@eventCoordinates, @distance)
+    end    
 
     def search_neighbour_rec(coordinates, distance)
 
@@ -130,16 +132,53 @@ class EventsController < ApplicationController
     #search_rec method ends  
     end
 
+    def within(polygon)
+      @output = Place.where({
+      "location" =>{       
+          "$geoWithin" => {
+            "$polygon" => polygon
+
+      }}})
+      @output = @output.map { |e| e.location.coordinates }
+    end
+       
+    def convex_hull(points)
+      points.sort!.uniq!
+      return points if points.length < 3
+        def cross(o, a, b)
+          (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+        end
+      @lower = Array.new
+      points.each{|p|
+        while @lower.length > 1 and cross(@lower[-2], @lower[-1], p) <= 0 do @lower.pop end
+          @lower.push(p)
+          }
+      @upper = Array.new
+        points.reverse_each{|p|
+          while @upper.length > 1 and cross(@upper[-2], @upper[-1], p) <= 0 do @upper.pop end
+          @upper.push(p)
+        }
+      @lower_upper = @lower[0...-1] + @upper[0...-1]
+      
+      
+
+      return @lower_upper
+    end 
+    
+    first_userSet(@eventCoordinates, @distance) 
+
     search_neighbour_rec(@present, @distance)
 
 
+   
+
+    #@heightPresent from search  
+
     @heightPresent = @heightPresent.uniq.sort
-
-     puts "@HEIGHT ARRAY" + "#{@heightPresent}"
-
     @maxHeight = @heightPresent.max
     @minHeight = @heightPresent.min
 
+    #create a array of hash from bsonPresent to group by height
     @bsonPresentHash = @bsonPresent.map { | place, user_id, height| {lat: place.location.coordinates[1], 
                                                                       lng: place.location.coordinates[0],
                                                                       alt: place.height}}
@@ -147,137 +186,81 @@ class EventsController < ApplicationController
     #group bsonPresentHash by altitude(height)
     @groupedArray = @bsonPresentHash.group_by{|x| x[:alt]}.values
 
-    # puts "@groupedArray: "+"#{@groupedArray}"
-    
-  
+    #Now get the all the present users cordinates in @allPointsArray
+    #by extracting lat and long from @groupedArray.
+    #the @allPointArray wiill be array of array grouped by height  
 
     @temp = Array.new
     @allPointsArray = Array.new()
 
     for i in 0..(@heightPresent.length-1)
       @temp[i] = @groupedArray[i]
-
-      @temp[i] << @temp[i].first
+      # @temp[i] << @temp[i].first
 
       @allPointsArray << @temp[i].map { |e| (e.tap {|hs| hs.delete(:alt)}).values.reverse }
+
+      #now make @allPointsArray in reverse order to get highest set of cordinate first
       @allPointsArray = @allPointsArray.reverse
     end
 
-   
-def within(polygon)
-  @output = Place.where({
-  "location" =>{       
-      "$geoWithin" => {
-        "$polygon" => polygon
-         
-    
-  }}})
-
-  @output = @output.map { |e| e.location.coordinates }
-
-
-end
-   
-
        
-      
+   
 
-      def convex_hull(points)
-        points.sort!.uniq!
-        return points if points.length < 3
-          def cross(o, a, b)
-            (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
-          end
-        @lower = Array.new
-        points.each{|p|
-          while @lower.length > 1 and cross(@lower[-2], @lower[-1], p) <= 0 do @lower.pop end
-            @lower.push(p)
-            }
-        @upper = Array.new
-          points.reverse_each{|p|
-            while @upper.length > 1 and cross(@upper[-2], @upper[-1], p) <= 0 do @upper.pop end
-            @upper.push(p)
-          }
-        @lower_upper = @lower[0...-1] + @upper[0...-1]
-        
-        
- 
-        return @lower_upper
+    #Now design Polygons
 
-        
-      end
-
-      @polygons = Array.new
+       @polygons = Array.new
        @rejectedUsers = Array.new
 
-      for i in 0..@allPointsArray.length-1  
+      for i in 0..@allPointsArray.length-1 
 
         convex_hull(@allPointsArray[i])
 
-        if i > 0
+          if i > 0
+            #get the available users in the last polygon by GeoWithin(last polygon)
+            within(@last_polygon) 
 
-          within(@t)
-            
-          if (@allPointsArray[i].uniq - @output.uniq).empty?
-          else
-            @rejectedUsers << (@allPointsArray[i].uniq - @output.uniq)
-            @allPointsArray[i] = @allPointsArray[i] - (@allPointsArray[i].uniq - @output.uniq)
-            convex_hull(@allPointsArray[i])
+              if (@allPointsArray[i].uniq - @output.uniq).empty?
+              else
+                @rejectedUsers << (@allPointsArray[i].uniq - @output.uniq)
+
+                #remove @rejected users from @allPointArray[i] set of coordinates for that height
+                @allPointsArray[i] = @allPointsArray[i] - (@allPointsArray[i].uniq - @output.uniq)
+
+                #design new polygon with only cordinates within last (its above) polygon
+                convex_hull(@allPointsArray[i])
+              end
           end
 
-        end
+         @last_polygon = @lower_upper
 
-         @t = @lower_upper
-
-        @convexHash = @lower_upper.map{|d| d.reverse}
-       
-        @polygons[i] = @convexHash.map{|lat, long| {lat: lat, lng: long}}
+         #Create a reverse hash from @lower_upper array of polygon. To display on map 
+         @polygons[i] = @lower_upper.map{|long, lat| {lat: lat, lng: long}}
       end
 
       
 
-      @bsonPresent = @bsonPresent.uniq
-      @bsonAll = @bsonPresent.map { | place, user_id| {coord: place.location.coordinates, 
-                                                        user_id: place.user_id,
-                                                         }}
+    #   @bsonPresent = @bsonPresent.uniq
+    #   @bsonAll = @bsonPresent.map { | place, user_id| {coord: place.location.coordinates, 
+    #                                                     user_id: place.user_id,
+    #                                                      }}
 
-    puts "******BSONALL***"+"#{@bsonAll}"
+    # puts "******BSONALL***"+"#{@bsonAll}"
 
-    @bson = (@bsonAll.detect{ |coord| coord["coord"] = [-6.250544, 53.359755]}).tap{|h| h.delete(:coord)}
+    # @bson = (@bsonAll.detect{ |coord| coord["coord"] = [-6.250544, 53.359755]}).tap{|h| h.delete(:coord)}
 
-    puts "******BSONALL QUERY***"+"#{@bson}"
+    # puts "******BSONALL QUERY***"+"#{@bson}"
 
-     @searchName = User.where(_id: @bson.select{|h| h["user_id"]})
-     @name = @searchName.map { |e| e.name  }
+    #  @searchName = User.where(_id: @bson.select{|h| h["user_id"]})
+    #  @name = @searchName.map { |e| e.name  }
 
-     puts "#{@name}"
-
-
+    #  puts "#{@name}"
 
 
-
-
-    def getUserName(coordinates)
-
-
-
-
-      
-    end
-
-      # @one = [[-6.252201, 53.360206], [-6.251949, 53.360149], [-6.250962, 53.359934], 
-     
-
-
-
-
-
-
-
-
-
-
+    #SHOW ENDS
   end
+
+
+  
 
   # GET /events/new
   def new
