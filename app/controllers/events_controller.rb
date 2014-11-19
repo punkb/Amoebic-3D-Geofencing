@@ -75,6 +75,7 @@ class EventsController < ApplicationController
 
       if (@searchResult).empty?
         #do Nothing
+        @message = "No Users present in the stadium yet"
       else
         @neighbours_coord =  Array.new
         @neighbours_coord = @searchResult.map { |c| c.location.coordinates}
@@ -109,10 +110,7 @@ class EventsController < ApplicationController
           #do Something
            @boundary << @current_user
         else
-          @searchResult.each do |u|
-            @bsonPresent << u
-            
-          end #each do ends
+
           @uniqCoords.each do |u|
             @present << u 
             @next_neighbours << u
@@ -134,17 +132,13 @@ class EventsController < ApplicationController
 
     search_neighbour_rec(@present, @distance)
 
-    @heightArray = Array.new
 
-    #pushing all presents users height to @heightArray
-    @bsonPresent.map { |e| @heightArray << e.height  }
+    @heightPresent = @heightPresent.uniq.sort
 
-    @heightArray = @heightArray.uniq
+     puts "@HEIGHT ARRAY" + "#{@heightPresent}"
 
-    puts "@HEIGHT ARRAY" + "#{@heightArray}"
-
-    @maxHeight = @heightArray.max
-    @minHeight = @heightArray.min
+    @maxHeight = @heightPresent.max
+    @minHeight = @heightPresent.min
 
     @bsonPresentHash = @bsonPresent.map { | place, user_id, height| {lat: place.location.coordinates[1], 
                                                                       lng: place.location.coordinates[0],
@@ -153,37 +147,39 @@ class EventsController < ApplicationController
     #group bsonPresentHash by altitude(height)
     @groupedArray = @bsonPresentHash.group_by{|x| x[:alt]}.values
 
-    puts "@groupedArray: "+"#{@groupedArray}"
+    # puts "@groupedArray: "+"#{@groupedArray}"
     
-    @minHeightArray = @groupedArray[0]
-    @maxHeightArray = @groupedArray[1]
+  
 
-    @minHeightArray << @minHeightArray[0]
-    @maxHeightArray << @maxHeightArray[0]
-
-    @points = Array.new
-    @points2 = Array.new
     @temp = Array.new
     @allPointsArray = Array.new()
 
-    for i in 0..(@heightArray.length-1)
+    for i in 0..(@heightPresent.length-1)
       @temp[i] = @groupedArray[i]
 
       @temp[i] << @temp[i].first
 
       @allPointsArray << @temp[i].map { |e| (e.tap {|hs| hs.delete(:alt)}).values.reverse }
+      @allPointsArray = @allPointsArray.reverse
     end
 
-    puts "**********************@allPointsArray: "+"#{@allPointsArray}"
+   
+def within(polygon)
+  @output = Place.where({
+  "location" =>{       
+      "$geoWithin" => {
+        "$polygon" => polygon
+         
+    
+  }}})
+
+  @output = @output.map { |e| e.location.coordinates }
+
+
+end
    
 
-
-        @minHeightArray.map { |e| @points << (e.tap {|hs| hs.delete(:alt)}).values.reverse  }
-        @maxHeightArray.map { |e| @points2 << (e.tap {|hs| hs.delete(:alt)}).values.reverse  }
-
-        # puts "*********@POINTs" +"#{@points}"
-        # puts "*********@POINTs2" +"#{@points2}"
-
+       
       
 
       def convex_hull(points)
@@ -203,35 +199,74 @@ class EventsController < ApplicationController
             @upper.push(p)
           }
         @lower_upper = @lower[0...-1] + @upper[0...-1]
-        @convexHash = @lower_upper.map{|d| d.reverse}
+        
+        
  
-        return @convexHash
+        return @lower_upper
+
         
       end
 
       @polygons = Array.new
+       @rejectedUsers = Array.new
 
-      for i in 0..@allPointsArray.length-1
+      for i in 0..@allPointsArray.length-1  
+
         convex_hull(@allPointsArray[i])
+
+        if i > 0
+
+          within(@t)
+            
+          if (@allPointsArray[i].uniq - @output.uniq).empty?
+          else
+            @rejectedUsers << (@allPointsArray[i].uniq - @output.uniq)
+            @allPointsArray[i] = @allPointsArray[i] - (@allPointsArray[i].uniq - @output.uniq)
+            convex_hull(@allPointsArray[i])
+          end
+
+        end
+
+         @t = @lower_upper
+
+        @convexHash = @lower_upper.map{|d| d.reverse}
+       
         @polygons[i] = @convexHash.map{|lat, long| {lat: lat, lng: long}}
       end
 
-      puts "*************@POLYGONS*********"+"#{@polygons}"
+      
+
+      @bsonPresent = @bsonPresent.uniq
+      @bsonAll = @bsonPresent.map { | place, user_id| {coord: place.location.coordinates, 
+                                                        user_id: place.user_id,
+                                                         }}
+
+    puts "******BSONALL***"+"#{@bsonAll}"
+
+    @bson = (@bsonAll.detect{ |coord| coord["coord"] = [-6.250544, 53.359755]}).tap{|h| h.delete(:coord)}
+
+    puts "******BSONALL QUERY***"+"#{@bson}"
+
+     @searchName = User.where(_id: @bson.select{|h| h["user_id"]})
+     @name = @searchName.map { |e| e.name  }
+
+     puts "#{@name}"
 
 
-      # convex_hull(@points)
 
-      # @innerPolygon =  @convexHash.map{|lat, long| {lat: lat, lng: long}}
-     
+
+
+
+    def getUserName(coordinates)
+
+
+
 
       
-      # convex_hull(@points2)
-      # @outterPolygon =  @convexHash.map{|lat, long| {lat: lat, lng: long}}
+    end
 
-
-
-
-
+      # @one = [[-6.252201, 53.360206], [-6.251949, 53.360149], [-6.250962, 53.359934], 
+     
 
 
 
