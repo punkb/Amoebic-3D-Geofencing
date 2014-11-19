@@ -164,78 +164,90 @@ class EventsController < ApplicationController
 
       return @lower_upper
     end 
+      
+
+    def design_polygon(bsonArray, hightArray)
+
+        #@heightPresent from search  
+
+        @heightPresent = hightArray.uniq.sort
+
+        #create a array of hash from bsonPresent to group by height
+        @bsonPresentHash = bsonArray.map { | place, user_id, height| {lat: place.location.coordinates[1], 
+                                                                          lng: place.location.coordinates[0],
+                                                                          alt: place.height}}
+
+        #group bsonPresentHash by altitude(height)
+        @groupedArray = @bsonPresentHash.group_by{|x| x[:alt]}.values
+
+        #Now get the all the present users cordinates in @allPointsArray
+        #by extracting lat and long from @groupedArray.
+        #the @allPointArray wiill be array of array grouped by height  
+
+        @temp = Array.new
+        @allPointsArray = Array.new()
+
+        for i in 0..(@heightPresent.length-1)
+          @temp[i] = @groupedArray[i]
+          # @temp[i] << @temp[i].first
+
+          @allPointsArray << @temp[i].map { |e| (e.tap {|hs| hs.delete(:alt)}).values.reverse }
+
+          #now make @allPointsArray in reverse order to get highest set of cordinate first
+          @allPointsArray = @allPointsArray.reverse
+        end
+
+           
+       
+
+        #Now design Polygons
+
+           @polygons = Array.new
+           @rejectedUsers = Array.new
+
+          for i in 0..@allPointsArray.length-1 
+
+            convex_hull(@allPointsArray[i])
+
+              if i > 0
+                #get the available users in the last polygon by GeoWithin(last polygon)
+                within(@last_polygon) 
+
+                  if (@allPointsArray[i].uniq - @output.uniq).empty?
+                  else
+                    @rejectedUsers << (@allPointsArray[i].uniq - @output.uniq)
+
+                    #remove @rejected users from @allPointArray[i] set of coordinates for that height
+                    @allPointsArray[i] = @allPointsArray[i] - (@allPointsArray[i].uniq - @output.uniq)
+
+                    #design new polygon with only cordinates within last (its above) polygon
+                    convex_hull(@allPointsArray[i])
+                  end
+              end
+
+             @last_polygon = @lower_upper
+
+             #Create a reverse hash from @lower_upper array of polygon. To display on map 
+             @polygons[i] = @lower_upper.map{|long, lat| {lat: lat, lng: long}}
+          end
+    end
     
+
     first_userSet(@eventCoordinates, @distance) 
 
-    search_neighbour_rec(@present, @distance)
+    if @present.empty?
+      @msg = "No Users present at the event"
+    else
+      search_neighbour_rec(@present, @distance)
 
+      design_polygon(@bsonPresent, @heightPresent)
 
-   
-
-    #@heightPresent from search  
-
-    @heightPresent = @heightPresent.uniq.sort
-    @maxHeight = @heightPresent.max
-    @minHeight = @heightPresent.min
-
-    #create a array of hash from bsonPresent to group by height
-    @bsonPresentHash = @bsonPresent.map { | place, user_id, height| {lat: place.location.coordinates[1], 
-                                                                      lng: place.location.coordinates[0],
-                                                                      alt: place.height}}
-
-    #group bsonPresentHash by altitude(height)
-    @groupedArray = @bsonPresentHash.group_by{|x| x[:alt]}.values
-
-    #Now get the all the present users cordinates in @allPointsArray
-    #by extracting lat and long from @groupedArray.
-    #the @allPointArray wiill be array of array grouped by height  
-
-    @temp = Array.new
-    @allPointsArray = Array.new()
-
-    for i in 0..(@heightPresent.length-1)
-      @temp[i] = @groupedArray[i]
-      # @temp[i] << @temp[i].first
-
-      @allPointsArray << @temp[i].map { |e| (e.tap {|hs| hs.delete(:alt)}).values.reverse }
-
-      #now make @allPointsArray in reverse order to get highest set of cordinate first
-      @allPointsArray = @allPointsArray.reverse
+     
+      @msg = "Here yu GO !!"
     end
 
-       
-   
 
-    #Now design Polygons
 
-       @polygons = Array.new
-       @rejectedUsers = Array.new
-
-      for i in 0..@allPointsArray.length-1 
-
-        convex_hull(@allPointsArray[i])
-
-          if i > 0
-            #get the available users in the last polygon by GeoWithin(last polygon)
-            within(@last_polygon) 
-
-              if (@allPointsArray[i].uniq - @output.uniq).empty?
-              else
-                @rejectedUsers << (@allPointsArray[i].uniq - @output.uniq)
-
-                #remove @rejected users from @allPointArray[i] set of coordinates for that height
-                @allPointsArray[i] = @allPointsArray[i] - (@allPointsArray[i].uniq - @output.uniq)
-
-                #design new polygon with only cordinates within last (its above) polygon
-                convex_hull(@allPointsArray[i])
-              end
-          end
-
-         @last_polygon = @lower_upper
-
-         #Create a reverse hash from @lower_upper array of polygon. To display on map 
-         @polygons[i] = @lower_upper.map{|long, lat| {lat: lat, lng: long}}
-      end
 
       
 

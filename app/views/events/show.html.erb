@@ -5,6 +5,8 @@
 
 <p id="notice"><%= notice %></p>
 
+<%= @msg %>
+
 <p>
   <strong>Name:</strong>
   <%= @event.name %>
@@ -19,9 +21,11 @@
 <%= link_to 'Edit', edit_event_path(@event) %> |
 <%= link_to 'Back', events_path %>
 
+
+<!-- 
 <% @audiance = @bsonPresentHash.map{|lat, long, alt| {lat: lat, lng: long, infowindow: alt } }%>
 
-
+ -->
 <!-- 
 <% @audiance = @present.map{|d| d.reverse}%>
 <% @audiance = @audiance.map{|lat, long, infowindow| {lat: lat, lng: long, infowindow: ([lat, long]).to_s} }%>
