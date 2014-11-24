@@ -15,14 +15,53 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
+    
+
+
+      
+
+    #   @bsonPresent = @bsonPresent.uniq
+    #   @bsonAll = @bsonPresent.map { | place, user_id| {coord: place.location.coordinates, 
+    #                                                     user_id: place.user_id,
+    #                                                      }}
+
+    # puts "******BSONALL***"+"#{@bsonAll}"
+
+    # @bson = (@bsonAll.detect{ |coord| coord["coord"] = [-6.250544, 53.359755]}).tap{|h| h.delete(:coord)}
+
+    # puts "******BSONALL QUERY***"+"#{@bson}"
+
+    #  @searchName = User.where(_id: @bson.select{|h| h["user_id"]})
+    #  @name = @searchName.map { |e| e.name  }
+
+    #  puts "#{@name}"
+
+
+    #SHOW ENDS
+  end
+
+  def geofence
+
+   @event = Event.find(params[:id])
+
     @bsonPresent = Array.new
     @heightPresent = Array.new
      @boundary = Array.new
      @present = Array.new
 
+    
+
     @eventName = @event.name
     @eventCoordinates = @event.coordinates
+    @c = Array.new
+    @c << @event.coordinates
     # @eventCoordinates = [-6.251208, 53.360912]
+    puts "@event Coordinates"+"#{@eventCoordinates}"
+     if (@c).empty?
+      @msg = "No Coordinates for event"
+      render('nocoordinates')
+    end
+
     @fixDist = 10/6378139.266
     @distance = 10/6378139.266
     @distInMeter = 5
@@ -235,8 +274,9 @@ class EventsController < ApplicationController
 
     first_userSet(@eventCoordinates, @distance) 
 
-    if @present.empty?
+    if @present.empty? || @bsonPresent.empty?
       @msg = "No Users present at the event"
+      render ('nocoordinates')
     else
       search_neighbour_rec(@present, @distance)
 
@@ -247,28 +287,7 @@ class EventsController < ApplicationController
     end
 
 
-
-
-      
-
-    #   @bsonPresent = @bsonPresent.uniq
-    #   @bsonAll = @bsonPresent.map { | place, user_id| {coord: place.location.coordinates, 
-    #                                                     user_id: place.user_id,
-    #                                                      }}
-
-    # puts "******BSONALL***"+"#{@bsonAll}"
-
-    # @bson = (@bsonAll.detect{ |coord| coord["coord"] = [-6.250544, 53.359755]}).tap{|h| h.delete(:coord)}
-
-    # puts "******BSONALL QUERY***"+"#{@bson}"
-
-    #  @searchName = User.where(_id: @bson.select{|h| h["user_id"]})
-    #  @name = @searchName.map { |e| e.name  }
-
-    #  puts "#{@name}"
-
-
-    #SHOW ENDS
+    
   end
 
 
