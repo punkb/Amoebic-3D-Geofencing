@@ -1,8 +1,9 @@
 Welcome 
 
+<div class="btn-group">
+<%= link_to 'New Event', new_event_path, :class => "btn btn-success" %>
 
-<%= link_to 'New Event', new_event_path %>
+<%= link_to 'Show Events', {:action => 'index' }, :class => "btn btn-default" %>
 
-<%= link_to 'Show Events', {:action => 'index' } %>
-
-<%= link_to 'New User', new_user_path %>
+<%= link_to 'New User', new_user_path, :class => "btn btn-success" %>
+</div>
