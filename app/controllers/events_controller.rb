@@ -7,6 +7,10 @@ class EventsController < ApplicationController
     @events = Event.all
   end
 
+  def home
+    
+  end
+
   def test
 
 @events = Event.all    

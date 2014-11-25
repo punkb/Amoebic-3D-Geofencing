@@ -1,6 +1,7 @@
-<h1>Listing events</h1>
 
-<table>
+
+<table class="table table-bordered table-striped">
+<h4><strong>All events</strong></h4>
   <thead>
     <tr>
       <th>Name</th>
@@ -16,9 +17,9 @@
         <td><%= event.name %></td>
         <td><%= event.address %></td>
      
-        <td><%= link_to 'Show Details', event %> </td>
-        <td><%= link_to 'Edit', edit_event_path(event) %></td>
-        <td><%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show Details', event, :class => "btn btn-success"  %> </td>
+        <td><%= link_to 'Edit', edit_event_path(event), :class => "btn btn-primary" %></td>
+        <td><%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' } , :class => "btn btn-danger" %></td>
       </tr>
     <% end %>
   </tbody>
@@ -26,4 +27,4 @@
 
 <br>
 
-<%= link_to 'New Event', new_event_path %>
+<%= link_to 'New Event', new_event_path, :class => "btn btn-success" %>
