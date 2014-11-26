@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get 'places/createevent'
   post 'places/createevent'
   get 'places/showevent'
+  get 'events/home'
 
 
 

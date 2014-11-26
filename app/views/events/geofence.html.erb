@@ -6,8 +6,8 @@
 <body>
 
 <%@center = Array.new %>
-<%= @center << @event.coordinates.reverse %>
-<%= @center.map { |lat, long| {lat: lat, lng: long, radius: 100}  }%>
+<% @center << @event.coordinates.reverse %>
+<% @center.map { |lat, long| {lat: lat, lng: long, radius: 100}  }%>
 
 
 
@@ -19,13 +19,21 @@
 <% @audiance = @present.map{|d| d.reverse}%>
 <% @audiance = @audiance.map{|lat, long, infowindow| {lat: lat, lng: long, infowindow: ([lat, long]).to_s} }%>
  -->
-<div class = "container" style = "width: 1000px" >
+<div id = "Map_Section"  class = "container"  >
+  <div class = "row">
+    <div class = "col-lg-16"  >
+      <div class = "col-lg-6" style = " height: 500px; background-color: #F7F7F7;  border: 1px solid #DDD;" >
+      <h3>Amoebic Geofence</h3>
 
-
-  <div id="multi_overlays" style='width: 800px; height: 800px;' align="left"></div>
-  <aside>
-  <div id="traditional_geofence" style='width: 800px; height: 800px;' align= "right"></div>
- </aside>
+        <div id="multi_overlays"  style = 'height: 400px;'>
+          
+        </div>
+      </div>
+      <div class = "col-lg-6" style = " height: 500px; background-color: #F7F7F7;  border: 1px solid #DDD;">
+      <h3>Traditional Geofence</h3>
+        <div id="traditional_geofence" style = 'height: 400px;'></div>     
+      </div>  
+    </div>
 </div>
 
 

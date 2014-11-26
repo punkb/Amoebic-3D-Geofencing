@@ -5,6 +5,7 @@
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+  <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
 
   <!-- Custom CSS -->
     <style>
@@ -27,27 +28,19 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="events/home">Amoebic Geofencing</a>
+                <!-- <a class="navbar-brand" href="events#home">Amoebic Geofencing</a> -->
+                <a class="navbar-brand" <%=link_to "Amoebic Geofencing", {:controller => "events", :action => "index"} %> </a>
 
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                <li role="presentation" class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-      Dropdown <span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu" role="menu">
-       <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-    </ul>
-  </li>
+       
                     <li>
-                        <a href="#">Users</a>
+                        <a <%=link_to "Users", {:controller => "users", :action => "index"}%></a>
                     </li>
                     <li>
-                        <a href="#">Events</a>
+                        <a  <%=link_to "Events", {:controller => "events", :action => "index"}%> </a>
                     </li>
                     <li>
                         <a href="#">Contact</a>
@@ -59,8 +52,11 @@
         <!-- /.container -->
     </nav>
 
+    
+
+
     <!-- Page Content -->
-    <div class="container">
+    <div class="container-fluid">
 
         <div class="row">
             

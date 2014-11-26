@@ -1,6 +1,10 @@
-<h1>Editing event</h1>
+<div class="container">
+<div id = "NewEvent", class = "col-lg-4">
+	<h3>Editing event</h3>
 
-<%= render 'form' %>
+	<%= render 'form' %>
 
-<%= link_to 'Show', @event %> |
-<%= link_to 'Back', events_path %>
+	<%= link_to 'Show', @event, :class => "btn btn-success" %> 
+	<%= link_to 'Back', events_path, :class => "btn btn-primary" %>
+</div>
+</div>
