@@ -1,0 +1,61 @@
+User 30 
+
+28 with height 10 >> success
+2 with height 1 (1 inside, 1 outside) >> success
+
+**************Amoebic Geofence Stats****************
+Total User = 30
+Total Users Detected = 30
+Total Users Rejected = 1
+Total Users in Geofence = 29
+**************Traditional Geofence Stats****************
+Total User = 30
+Total Users detected/In Geofence = 30
+False Possitive
+***********************************************************
+
+
+
+Users 50
+added 13 new with heigh 1
+
+
+
+**************Amoebic Geofence Stats****************
+Total User = 50
+Total Users Detected = 46
+Total Users Rejected = 8
+Total Users in Geofence = 38
+**************Traditional Geofence Stats****************
+Total User = 50
+Total Users detected/In Geofence = 41
+False Possitive = 3
+***********************************************************
+
+user 100
+
+**************Amoebic Geofence Stats****************
+Total User = 100
+Total Users Detected = 95
+Total Users Rejected = 33
+Total Users in Geofence = 62
+**************Traditional Geofence Stats****************
+Total User = 100
+Total Users detected/In Geofence = 89
+False Possitive = 27
+***********************************************************
+
+
+
+users 150
+
+**************Amoebic Geofence Stats****************
+Total User = 150
+Total Users Detected = 139
+Total Users Rejected = 59
+Total Users in Geofence = 80
+**************Traditional Geofence Stats****************
+Total User = 150
+Total Users detected/In Geofence = 127
+False Possitive = 47
+***********************************************************

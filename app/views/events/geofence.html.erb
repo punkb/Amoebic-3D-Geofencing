@@ -11,27 +11,29 @@
 
 
 
-<!-- 
-<% @audiance = @bsonPresentHash.map{|lat, long, alt| {lat: lat, lng: long, infowindow: alt } }%>
+ 
 
- -->
-<!-- 
-<% @audiance = @present.map{|d| d.reverse}%>
-<% @audiance = @audiance.map{|lat, long, infowindow| {lat: lat, lng: long, infowindow: ([lat, long]).to_s} }%>
- -->
+ 
 <div class = "container" style = "width: 1000px" >
-
-
-  <div id="multi_overlays" style='width: 800px; height: 800px;' align="left"></div>
-  <aside>
-  <div id="traditional_geofence" style='width: 800px; height: 800px;' align= "right"></div>
- </aside>
+<div class = "row">
+<div class = "span8">
+  <div id="multi_overlays" class="span4" style=' height: 800px;'></div>
+  <div id="All_Users" class="span4" style='height: 800px;' ></div>
 </div>
+</div>
+</div>
+
+
+  
+  <div id="traditional_geofence" style='width: 800px; height: 800px;' align= "right"></div>
+
+ 
+
 
 
 
 <script type="text/javascript">
-var audianceData = <%= @audiance.to_json.html_safe %>
+var audiance = <%= @bsonPresentHash.to_json.html_safe %>
 var data = <%= @polygons.to_json.html_safe %>
 
 var handler = Gmaps.build('Google');
@@ -48,7 +50,7 @@ for (i = 0; i < data.length; i++){
 
 }
  
- var markers = handler.addMarkers(audianceData);
+ var markers = handler.addMarkers(audiance);
   
 handler.bounds.extendWith(markers);
   
@@ -78,6 +80,33 @@ handler_circle.buildMap({ internal: {id: 'traditional_geofence'}}, function(){
   );
 
  var markers_circle = handler_circle.addMarkers(audianceData);
+  
+handler_circle.bounds.extendWith(markers_circle);
+  
+
+handler_circle.bounds.extendWith(circles);
+  
+ 
+  handler_circle.fitMapToBounds();
+  handler_circle.getMap().setZoom(18);
+});
+
+</script>
+<script type="text/javascript">
+
+var audianceAll = <%= @totalNumberOfUsersHash.to_json.html_safe %>
+
+var center = <%= @center.to_json.html_safe %>
+var handler_circle = Gmaps.build('Google');
+  
+handler_circle.buildMap({ internal: {id: 'All_Users'}}, function(){ 
+
+ var circles = handler_circle.addCircles(
+    [{lat: 53.360712, lng:-6.251208999999999, radius: 150}],
+    { strokeColor: '#FF0000'}
+  );
+
+ var markers_circle = handler_circle.addMarkers(audianceAll);
   
 handler_circle.bounds.extendWith(markers_circle);
   

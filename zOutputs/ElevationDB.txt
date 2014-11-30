@@ -25,6 +25,6 @@ Height = 1
 for i in 0..(coords.length-1)
 User.create(name:names[i])
 a = User.last
-   a.places << Place.create(location:{ type: "Point", coordinates:coords[i] }, height:1)
+   a.places << Place.create(location:{ type: "Point", coordinates:coords[i] }, height:10)
    a.save
   end
