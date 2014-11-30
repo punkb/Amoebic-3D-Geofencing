@@ -1,0 +1,5 @@
+Failed
+
+1. only one user with height 1 out of  geofence of height 10  => increased dist still error
+
+(if i add same kind of user inside then works fine )
