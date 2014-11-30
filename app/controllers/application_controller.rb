@@ -6,5 +6,4 @@ class ApplicationController < ActionController::Base
 def logo
 	redirect_to(:controller => "event", :action => "home")
 end
-
 end

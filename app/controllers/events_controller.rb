@@ -7,12 +7,6 @@ class EventsController < ApplicationController
     @events = Event.all
   end
 
-  def home
-
-    render ("home")
-    
-  end
-
   def test
 
 @events = Event.all    
@@ -21,7 +15,7 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
-  
+    
   end
 
   def geofence
@@ -32,6 +26,10 @@ class EventsController < ApplicationController
     @heightPresent = Array.new
      @boundary = Array.new
      @present = Array.new
+
+@totalNumberOfUsersHash = (Place.all).map{| place, user_id, height| {lat: place.location.coordinates[1], 
+                                                                          lng: place.location.coordinates[0]
+                                                                        }}
 
     
 
@@ -49,6 +47,7 @@ class EventsController < ApplicationController
     @fixDist = 10/6378139.266
     @distance = 10/6378139.266
     @distInMeter = 5
+    @forCircle = 100/4828.032
 
 
     def search(coordinates, distance )
@@ -164,6 +163,17 @@ class EventsController < ApplicationController
       }}})
       @output = @output.map { |e| e.location.coordinates }
     end
+
+    def withinCircle(coordinates, radius)
+         # @traditionalGeo = Place.geo_near(coordinates).sphe.max_distance(radius)
+        @traditionalGeo = Place.where({
+          "location" =>{       
+              "$geoWithin" => {
+                "$center" => [coordinates, 11500/6378139.266]
+
+          }}})
+         @traditionalGeo = (@traditionalGeo.map { |e| e.location.coordinates }).length
+    end
        
     def convex_hull(points)
       points.sort!.uniq!
@@ -194,12 +204,13 @@ class EventsController < ApplicationController
         #@heightPresent from search  
 
         @heightPresent = hightArray.uniq.sort
+        @totalNumberOfUsers = bsonArray.length
 
         #create a array of hash from bsonPresent to group by height
         @bsonPresentHash = bsonArray.map { | place, user_id, height| {lat: place.location.coordinates[1], 
                                                                           lng: place.location.coordinates[0],
                                                                           alt: place.height}}
-
+        
         #group bsonPresentHash by altitude(height)
         @groupedArray = @bsonPresentHash.group_by{|x| x[:alt]}.values
 
@@ -218,6 +229,7 @@ class EventsController < ApplicationController
 
           #now make @allPointsArray in reverse order to get highest set of cordinate first
           @allPointsArray = @allPointsArray.reverse
+          @allp = @allPointsArray 
         end
 
            
@@ -234,7 +246,8 @@ class EventsController < ApplicationController
 
               if i > 0
                 #get the available users in the last polygon by GeoWithin(last polygon)
-                within(@last_polygon) 
+                within(@last_polygon)
+                 
 
                   if (@allPointsArray[i].uniq - @output.uniq).empty?
                   else
@@ -253,16 +266,55 @@ class EventsController < ApplicationController
              #Create a reverse hash from @lower_upper array of polygon. To display on map 
              @polygons[i] = @lower_upper.map{|long, lat| {lat: lat, lng: long}}
           end
+
+          withinCircle(@eventCoordinates, @forCircle)
+          
+          # puts "*********All Points Users = "+"#{@allp.map { |e| e.length }}"
+          # puts "*********Rejected Users = "+"#{@rejectedUsers.map { |e| e.length }}"
+          # puts "***********Total Number of users = "+"#{@totalNumberOfUsers}"
+          # puts "***********bsonArray = "+"#{bsonArray.length}"
+
+           @rejectedUsers.map {|e| @rej_users = e.length}
+
+           @present_users = (@bsonPresentHash).length
+           total_users_geo = (@present_users.to_i - @rej_users.to_i)
+           total_users_db = Place.count
+
+           @False_possitive = @traditionalGeo.to_i - total_users_geo.to_i  
+
+
+          
+
+
+          puts "**************Amoebic Geofence Stats****************"
+          puts "Total User = "+"#{total_users_db}"
+          puts "Total Users Detected = "+"#{@present_users}"
+          puts "Total Users Rejected = "+"#{@rej_users}"
+          puts "Total Users in Geofence = "+"#{total_users_geo}"
+         
+
+
+          puts "**************Traditional Geofence Stats****************"
+          puts "Total User = "+"#{total_users_db}"
+          puts "Total Users detected = "+"#{@traditionalGeo}"
+          puts "False Possitive = "+"#{@False_possitive}"
+          puts "***********************************************************"
     end
     
 
-    first_userSet(@eventCoordinates, @distance) 
+    timeFirstUser = Benchmark.realtime do
+      first_userSet(@eventCoordinates, @distance) 
+    end
 
     if @present.empty? || @bsonPresent.empty?
       @msg = "No Users present at the event"
       render ('nocoordinates')
     else
+
+     Benchmark.bm(7) do |x| 
+     x.report ("Search_Neighbour") {
       search_neighbour_rec(@present, @distance)
+      } end
 
       design_polygon(@bsonPresent, @heightPresent)
 
@@ -270,7 +322,7 @@ class EventsController < ApplicationController
       @msg = "Here yu GO !!"
     end
 
-
+      puts "Time elapsed by First User #{timeFirstUser*1000} milliseconds"
     
   end
 
