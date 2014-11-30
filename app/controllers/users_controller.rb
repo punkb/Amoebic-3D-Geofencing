@@ -11,6 +11,9 @@ class UsersController < ApplicationController
   # GET /users/1.json
  
 def show
+   id = params[:id]
+  @user_place =  Place.where(:user_id => id)
+
   
 end
 

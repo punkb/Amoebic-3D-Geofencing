@@ -1,25 +1,35 @@
-<h1>Listing users</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
 
-  <tbody>
-    <% @users.each do |user| %>
-      <tr>
-        <td><%= user.name %></td>
-        <td><%= link_to 'Show', user %></td>
-        <td><%= link_to 'Edit', edit_user_path(user) %></td>
-        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div id = "user_list", class = "container" >
+  <div class="col-lg-8" >
+  
+    <%= link_to ' Add New User', new_user_path, :class => "btn btn-myGrey" %>
+    <h4><strong>All Users</strong></h4>
+    <div class="pre-scrollable " style="max-height: 500px;">
+      <table class="table table-bordered table-striped" >      
+        <thead>
+          <tr>
 
-<br>
+            <th>Name</th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>        
+          <% @users.each do |user| %>
+            <tr>
+              <td><%= user.name %></td>
+              <td><%= link_to 'Show', user, :class => "btn btn-myGreen" %></td>
+              <td><%= link_to 'Edit', edit_user_path(user), :class => "btn btn-myBlue" %></td>
+              <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-myRed" %></td>
+            </tr>
+          <% end %>
+        </tbody> 
+               
+      </table>
+       </div>
+     
+  </div>
+</div>
 
-<%= link_to 'New User', new_user_path %>
+
+
+

@@ -6,34 +6,40 @@
 <body>
 
 <%@center = Array.new %>
-<%= @center << @event.coordinates.reverse %>
-<%= @center.map { |lat, long| {lat: lat, lng: long, radius: 100}  }%>
+<% @center << @event.coordinates.reverse %>
+<% @center.map { |lat, long| {lat: lat, lng: long, radius: 100}  }%>
 
 
 
- 
+<!-- 
+<% @audiance = @bsonPresentHash.map{|lat, long, alt| {lat: lat, lng: long, infowindow: alt } }%>
 
- 
-<div class = "container" style = "width: 1000px" >
-<div class = "row">
-<div class = "span8">
-  <div id="multi_overlays" class="span4" style=' height: 800px;'></div>
-  <div id="All_Users" class="span4" style='height: 800px;' ></div>
+ -->
+<!-- 
+<% @audiance = @present.map{|d| d.reverse}%>
+<% @audiance = @audiance.map{|lat, long, infowindow| {lat: lat, lng: long, infowindow: ([lat, long]).to_s} }%>
+ -->
+<div id = "Map_Section"  class = "container"  >
+  <div class = "row">
+    <div class = "col-lg-16"  >
+      <div class = "col-lg-6" style = " height: 500px; background-color: #F7F7F7;  border: 1px solid #DDD;" >
+      <h3>Amoebic Geofence</h3>
+
+        <div id="multi_overlays"  style = 'height: 400px;'>
+          
+        </div>
+      </div>
+      <div class = "col-lg-6" style = " height: 500px; background-color: #F7F7F7;  border: 1px solid #DDD;">
+      <h3>Traditional Geofence</h3>
+        <div id="traditional_geofence" style = 'height: 400px;'></div>     
+      </div>  
+    </div>
 </div>
-</div>
-</div>
-
-
-  
-  <div id="traditional_geofence" style='width: 800px; height: 800px;' align= "right"></div>
-
- 
-
 
 
 
 <script type="text/javascript">
-var audiance = <%= @bsonPresentHash.to_json.html_safe %>
+var audianceData = <%= @audiance.to_json.html_safe %>
 var data = <%= @polygons.to_json.html_safe %>
 
 var handler = Gmaps.build('Google');
@@ -50,7 +56,7 @@ for (i = 0; i < data.length; i++){
 
 }
  
- var markers = handler.addMarkers(audiance);
+ var markers = handler.addMarkers(audianceData);
   
 handler.bounds.extendWith(markers);
   
@@ -80,33 +86,6 @@ handler_circle.buildMap({ internal: {id: 'traditional_geofence'}}, function(){
   );
 
  var markers_circle = handler_circle.addMarkers(audianceData);
-  
-handler_circle.bounds.extendWith(markers_circle);
-  
-
-handler_circle.bounds.extendWith(circles);
-  
- 
-  handler_circle.fitMapToBounds();
-  handler_circle.getMap().setZoom(18);
-});
-
-</script>
-<script type="text/javascript">
-
-var audianceAll = <%= @totalNumberOfUsersHash.to_json.html_safe %>
-
-var center = <%= @center.to_json.html_safe %>
-var handler_circle = Gmaps.build('Google');
-  
-handler_circle.buildMap({ internal: {id: 'All_Users'}}, function(){ 
-
- var circles = handler_circle.addCircles(
-    [{lat: 53.360712, lng:-6.251208999999999, radius: 150}],
-    { strokeColor: '#FF0000'}
-  );
-
- var markers_circle = handler_circle.addMarkers(audianceAll);
   
 handler_circle.bounds.extendWith(markers_circle);
   

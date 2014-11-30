@@ -10,39 +10,25 @@
 
 </div>
 
-<script type="text/javascript">
-  window.onload = getUserLocation(); 
+ <script type="text/javascript">
+   window.onload = getUserLocation(); 
 
-</script>
+ </script>
 
 
 <body>
 
-h1>New user</h1>
+<div id="New_User_Form" class="col-lg-4">
 
-<%= form_for(@user) do |f| %>
-  <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+<h4><strong>New user</strong></h4>
 
-      <ul>
-      <% @user.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
 
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+<%= render 'form' %>
 
-<%= link_to 'Back', users_path %>
+
+<%= link_to 'Back', users_path, :class => "btn btn-success" %>
+
+</div>
 
 
 

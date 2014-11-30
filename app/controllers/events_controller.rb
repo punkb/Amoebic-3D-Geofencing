@@ -16,28 +16,6 @@ class EventsController < ApplicationController
   # GET /events/1.json
   def show
     
-
-
-      
-
-    #   @bsonPresent = @bsonPresent.uniq
-    #   @bsonAll = @bsonPresent.map { | place, user_id| {coord: place.location.coordinates, 
-    #                                                     user_id: place.user_id,
-    #                                                      }}
-
-    # puts "******BSONALL***"+"#{@bsonAll}"
-
-    # @bson = (@bsonAll.detect{ |coord| coord["coord"] = [-6.250544, 53.359755]}).tap{|h| h.delete(:coord)}
-
-    # puts "******BSONALL QUERY***"+"#{@bson}"
-
-    #  @searchName = User.where(_id: @bson.select{|h| h["user_id"]})
-    #  @name = @searchName.map { |e| e.name  }
-
-    #  puts "#{@name}"
-
-
-    #SHOW ENDS
   end
 
   def geofence

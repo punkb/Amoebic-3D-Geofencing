@@ -5,20 +5,23 @@
 
 <body>
 
+<div id = "Event_Detail" class = "container">
+  <p id="notice"><%= notice %></p>
+    <p>
+      <strong>Name:</strong>
+      <%= @event.name %>
+    </p>
 
-<p id="notice"><%= notice %></p>
+    <p>
+      <strong>Address:</strong>
+      <%= @event.address %>
+    </p>
 
+    <%= link_to 'Edit', edit_event_path(@event), :class => "btn btn-myBlue" %> 
+    <%= link_to 'Back', events_path, :class => "btn btn-myGrey"  %> 
+    <%= link_to 'Show Geofence', {:action => 'geofence', :id => @event.id }, :class => "btn btn-myGreen"  %>
+</div>
 
-
-<p>
-  <strong>Name:</strong>
-  <%= @event.name %>
-</p>
-
-<p>
-  <strong>Address:</strong>
-  <%= @event.address %>
-</p>
 
 
 <%@center = Array.new %>
@@ -26,13 +29,17 @@
 <% @center = @center.map { |lat, long| {lat: lat, lng: long, infowindow: @event.name}  }%>
 
 
-<%= link_to 'Edit', edit_event_path(@event) %> |
-<%= link_to 'Back', events_path %> |
-<%= link_to 'Show Geofence', {:action => 'geofence', :id => @event.id } %>
 
-<div style='width: 800px;'>
+<div id = "Event" class = "container" >
+<div class = "col-lg-12" style = " height: 450px; background-color: #F7F7F7;  border: 1px solid #DDD;">
+<h3> <%= @event.name%></h3>
+  <div id="event_map" style = 'height: 350px;' ></div>
+ </div>
+ </div>
+
+<!-- <div style='width: 800px;'>
   <div id="event_map" style='width: 800px; height: 400px;'></div>
-</div>
+</div> -->
 
 <script type="text/javascript">
 
