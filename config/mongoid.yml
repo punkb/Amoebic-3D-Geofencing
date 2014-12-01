@@ -6,10 +6,13 @@ development:
       # Defines the name of the default database that Mongoid can connect to.
       # (required).
       database: amoebicgeofenceNoGeoSpatial_development
+
       # Provides the hosts the default session can connect to. Must be an array
       # of host:port pairs. (required)
       hosts:
         - localhost:27017
+        #- pankthesis-2:27017
+
       options:
         # Change the default write concern. (default = { w: 1 })
         # write:

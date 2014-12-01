@@ -27,7 +27,7 @@ class EventsController < ApplicationController
      @boundary = Array.new
      @present = Array.new
 
-@totalNumberOfUsersHash = (Place.all).map{| place, user_id, height| {lat: place.location.coordinates[1], 
+     @totalNumberOfUsersHash = (Place.all).map{| place, user_id, height| {lat: place.location.coordinates[1], 
                                                                           lng: place.location.coordinates[0]
                                                                         }}
 
@@ -166,13 +166,13 @@ class EventsController < ApplicationController
 
     def withinCircle(coordinates, radius)
          # @traditionalGeo = Place.geo_near(coordinates).sphe.max_distance(radius)
-        @traditionalGeo = Place.where({
+         @traditionalGeo = Place.where({
           "location" =>{       
               "$geoWithin" => {
                 "$center" => [coordinates, 11500/6378139.266]
 
           }}})
-         @traditionalGeo = (@traditionalGeo.map { |e| e.location.coordinates }).length
+         @total_users_trad = (@traditionalGeo.map { |e| e.location.coordinates }).length
     end
        
     def convex_hull(points)
@@ -229,7 +229,7 @@ class EventsController < ApplicationController
 
           #now make @allPointsArray in reverse order to get highest set of cordinate first
           @allPointsArray = @allPointsArray.reverse
-          @allp = @allPointsArray 
+          # @allp = @allPointsArray 
         end
 
            
@@ -266,39 +266,6 @@ class EventsController < ApplicationController
              #Create a reverse hash from @lower_upper array of polygon. To display on map 
              @polygons[i] = @lower_upper.map{|long, lat| {lat: lat, lng: long}}
           end
-
-          withinCircle(@eventCoordinates, @forCircle)
-          
-          # puts "*********All Points Users = "+"#{@allp.map { |e| e.length }}"
-          # puts "*********Rejected Users = "+"#{@rejectedUsers.map { |e| e.length }}"
-          # puts "***********Total Number of users = "+"#{@totalNumberOfUsers}"
-          # puts "***********bsonArray = "+"#{bsonArray.length}"
-
-           @rejectedUsers.map {|e| @rej_users = e.length}
-
-           @present_users = (@bsonPresentHash).length
-           total_users_geo = (@present_users.to_i - @rej_users.to_i)
-           total_users_db = Place.count
-
-           @False_possitive = @traditionalGeo.to_i - total_users_geo.to_i  
-
-
-          
-
-
-          puts "**************Amoebic Geofence Stats****************"
-          puts "Total User = "+"#{total_users_db}"
-          puts "Total Users Detected = "+"#{@present_users}"
-          puts "Total Users Rejected = "+"#{@rej_users}"
-          puts "Total Users in Geofence = "+"#{total_users_geo}"
-         
-
-
-          puts "**************Traditional Geofence Stats****************"
-          puts "Total User = "+"#{total_users_db}"
-          puts "Total Users detected = "+"#{@traditionalGeo}"
-          puts "False Possitive = "+"#{@False_possitive}"
-          puts "***********************************************************"
     end
     
 
@@ -306,23 +273,75 @@ class EventsController < ApplicationController
       first_userSet(@eventCoordinates, @distance) 
     end
 
+
     if @present.empty? || @bsonPresent.empty?
       @msg = "No Users present at the event"
       render ('nocoordinates')
     else
 
-     Benchmark.bm(7) do |x| 
-     x.report ("Search_Neighbour") {
-      search_neighbour_rec(@present, @distance)
-      } end
+     # Benchmark.bm(7) do |x| 
+     # x.report ("Benchmark") {
+     #  search_neighbour_rec(@present, @distance)
+     #  } end
 
-      design_polygon(@bsonPresent, @heightPresent)
+       @Neighbor_Search = Benchmark.realtime do
+       search_neighbour_rec(@present, @distance)
+       end
 
-     
-      @msg = "Here yu GO !!"
+       @Geofence_Design = Benchmark.realtime do
+        design_polygon(@bsonPresent, @heightPresent)       
+        @msg = "Here yu GO !!"
+       end
+
+        #Accuracy Evaluation Section starts
+
+       withinCircle(@eventCoordinates, @forCircle)
+          
+           @rejectedUsers.map {|e| @rej_users_3D = e.length}
+           @present_users_3D = (@bsonPresentHash).length
+           @total_users_3D = (@present_users_3D.to_i - @rej_users_3D.to_i)
+           @total_users_db = Place.count
+
+           @False_possitive = @total_users_trad.to_i - @total_users_3D.to_i
+
+           if @total_users_3D.to_i > @total_users_trad.to_i
+              @False_possitive_3D = @total_users_3D.to_i - @total_users_trad.to_i
+
+           else 
+
+              @False_negative = 0
+              @False_possitive_3D = 0
+           end
+
+
+            puts "**************Amoebic 3D Geofence User Statistics****************"
+            puts "Total User = "+"#{@total_users_db}"
+            puts "Total Users Detected = "+"#{@present_users_3D}"
+            puts "Total Users Rejected = "+"#{@rej_users_3D}"
+            puts "Total Users in Geofence = "+"#{@total_users_3D}"
+            puts "False Possitive = "+"#{@False_possitive_3D}"
+           
+
+            puts "**************Traditional Geofence User Statistics****************"
+            puts "Total User = "+"#{@total_users_db}"
+            puts "Total Users detected = "+"#{@total_users_trad}"
+            puts "Total Users in Geofence = "+"#{@total_users_trad}"
+            puts "False Possitive = "+"#{@False_possitive}"
+            # puts "False Negative = "+"#{@False_negative}"         
+      
+
+             puts "------Time elapsed for each function for #{@total_users_db} users------------"
+             puts "   First_User()       |  "+"#{timeFirstUser*1000} ms     " 
+             puts "   Neighbor_Search()  |  "+"#{@Neighbor_Search*1000} ms  "
+             puts "   Geofence_Design()  |  "+"#{@Geofence_Design*1000} ms"
+             puts "-----------------------------------------------------------------------------"
+
+          #Accuracy Evaluation Section Ends
+
     end
 
-      puts "Time elapsed by First User #{timeFirstUser*1000} milliseconds"
+
+      
     
   end
 
